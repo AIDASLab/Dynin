@@ -827,10 +827,10 @@
 
   /* Example content shell (your later UI goes inside) */
   #examples .collection-surface {
-    border-radius: 16px;
-    border: 1px solid rgba(15, 15, 112, 0.10);
-    background: rgba(15, 15, 112, 0.02);
-    overflow: hidden;
+    border: 0;
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
   }
 
   /* Placeholder you can remove later */
