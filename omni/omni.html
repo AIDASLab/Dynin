@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OMaDA — Omni-Modal Model</title>
+
+    <meta name="description" content="Dynin-Omni — omni-modal foundation model (placeholder launch page)." />
+    <meta name="theme-color" content="#0f0f70" />
+
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+    <link rel="stylesheet" href="./omni.css" />
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+        svg: { fontCache: 'global' }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script defer src="./omni.js"></script>
+  </head>
+
+  <body>
+    <!-- Sticky top nav (simple, Seed-like, but not identical) -->
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="#top" aria-label="Dynin-Omni Home">
+          <span class="brand__dot" aria-hidden="true"></span>
+          <span class="brand__text">Dynin-Omni</span>
+        </a>
+
+        <button
+          class="nav__toggle"
+          id="navToggle"
+          type="button"
+          aria-controls="navMenu"
+          aria-expanded="false"
+        >
+          Menu
+        </button>
+
+        <div class="nav__links" id="navMenu">
+          <a href="#overview">Overview</a>
+          <a href="#methods">Methods</a>
+          <a href="#results">Results</a>
+          <a href="https://aidas.snu.ac.kr" target="_blank" rel="noopener noreferrer">AIDAS Lab</a>
+        </div>
+
+      </nav>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="container hero__inner">
+          <div class="hero__meta">Feb 17, 2026</div>
+
+          <h1 class="hero__title">Dynin-Omni Preview</h1>
+
+          <p class="hero__subtitle">
+            We introduce Dynin-Omni, a first masked diffusion-based omnimodal foundation model that unifies text, image, video, and speech understanding and generation, achieving strong cross-modal performance within a single architecture.
+          </p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="https://arxiv.org/abs/2509.22820" target="_blank" rel="noopener noreferrer">Read Paper</a>
+            <a class="btn btn--secondary" href="https://openreview.net/forum?id=2Gc8aj0afg" target="_blank" rel="noopener noreferrer">Try Now</a>
+          </div>
+
+          <!-- Video placeholder -->
+          <a class="video" href="#" aria-label="Play intro video (placeholder)">
+            <div class="video__frame" role="img" aria-label="Video placeholder">
+              <div class="video__play" aria-hidden="true">
+                <span class="video__triangle"></span>
+              </div>
+
+              <div class="video__text">
+                <div class="video__title">Dynin-Omni</div>
+                <div class="video__desc">Intro video placeholder</div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- OVERVIEW -->
+      <section id="overview" class="section">
+        <div class="container">
+          <h2 class="section__title">Overview</h2>
+
+          <div class="prose">
+            <p>
+              <strong>Dynin-Omni</strong> is an omnimodal discrete diffusion foundation model released by the AIDAS Laboratory. It is the first masked diffusion architecture to unify text, image, video, and speech understanding and generation within a single framework. By leveraging iterative confidence-based refinement and bidirectional token modeling, <strong>Dynin-Omni</strong> enables scalable any-to-any cross-modal generation across modalities. As demonstrated in our experiments, <strong>Dynin-Omni</strong> achieves strong and consistent performance across diverse multimodal benchmarks, validating discrete diffusion as a practical paradigm for unified omnimodal intelligence.
+            </p>
+          </div>
+
+          <figure class="figure">
+            <img class="figure__img" src="./assets/Fig_main_result.png" alt="Main result figure" />
+          </figure>
+        </div>
+      </section>
+
+      <!-- CAPABILITIES -->
+      <section id="capabilities" class="section">
+        <div class="container">
+          <h2 class="section__title">Capabilities</h2>
+
+          <div class="card-group card-group--generic-card-group grid spacer-block-xs-bottom">
+            <div class="card-group__cards grid grid__column--span-12">
+
+              <!-- 1) Text Reasoning -->
+              <div class="generic-card-group-container">
+                <article class="card card--general flip-card js-flip-card" data-flip-delay="650" tabindex="0">
+                  <div class="card__inner flip-card__inner">
+
+                    <!-- FRONT (icon only) -->
+                    <div class="flip-card__face flip-card__face--front">
+                      <div class="cap-icon">
+                        <figure class="media__container">
+                          <div class="block-contained">
+                            <div class="media-icon media-icon--contained media-icon--contained--outline media-icon--gemini-gradient">
+                              <div class="media-icon--contained__inner media--aspect-1-1">
+                                <div class="media-icon__icon-wrapper media-icon--contained__icon">
+                                  <div class="block-symbol">
+                                    <img
+                                      class="cap-icon__img"
+                                      src="./assets/icon_text.png"
+                                      alt="Text icon"
+                                      draggable="false"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </figure>
+                      </div>
+                    </div>
+
+                    <!-- BACK (icon only) -->
+                    <div class="flip-card__face flip-card__face--back">
+                      <div class="cap-icon">
+                        <figure class="media__container">
+                          <div class="block-contained">
+                            <div class="media-icon media-icon--contained media-icon--contained--outline media-icon--gemini-gradient">
+                              <div class="media-icon--contained__inner media--aspect-1-1">
+                                <div class="media-icon__icon-wrapper media-icon--contained__icon">
+                                  <div class="block-symbol">
+                                    <button
+                                      class="cap-icon__btn"
+                                      type="button"
+                                      data-modal-src="./assets/Fig_geneval.png"
+                                      aria-label="Open image preview"
+                                    >
+                                      <img
+                                        class="cap-icon__img"
+                                        src="./assets/icon_whatever.png"
+                                        alt="Preview"
+                                        draggable="false"
+                                      />
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </figure>
+                      </div>
+                    </div>
+
+                  </div>
+                </article>
+
+                <div class="capability-meta">
+                  <h3 class="capability-title">Text Reasoning</h3>
+                  <p class="capability-desc">
+                    Solves multi-step problems and follows structured instructions with robust reasoning.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 2) Image Understanding -->
+              <div class="generic-card-group-container">
+                <article class="card card--general flip-card js-flip-card" data-flip-delay="650" tabindex="0">
+                  <div class="card__inner flip-card__inner">
+                    <div class="flip-card__face flip-card__face--front">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                    <div class="flip-card__face flip-card__face--back">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <div class="capability-meta">
+                  <h3 class="capability-title">Image Understanding</h3>
+                  <p class="capability-desc">
+                    Answers detailed visual questions and understands fine-grained objects, text, and layouts.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 3) Video Understanding -->
+              <div class="generic-card-group-container">
+                <article class="card card--general flip-card js-flip-card" data-flip-delay="650" tabindex="0">
+                  <div class="card__inner flip-card__inner">
+                    <div class="flip-card__face flip-card__face--front">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                    <div class="flip-card__face flip-card__face--back">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <div class="capability-meta">
+                  <h3 class="capability-title">Video Understanding</h3>
+                  <p class="capability-desc">
+                    Tracks temporal dynamics and answers spatiotemporal questions over videos.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 4) Image Generation -->
+              <div class="generic-card-group-container">
+                <article class="card card--general flip-card js-flip-card" data-flip-delay="650" tabindex="0">
+                  <div class="card__inner flip-card__inner">
+                    <div class="flip-card__face flip-card__face--front">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                    <div class="flip-card__face flip-card__face--back">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <div class="capability-meta">
+                  <h3 class="capability-title">Image Generation</h3>
+                  <p class="capability-desc">
+                    Generates high-quality images from text prompts with strong compositional control.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 5) Image Editing -->
+              <div class="generic-card-group-container">
+                <article class="card card--general flip-card js-flip-card" data-flip-delay="650" tabindex="0">
+                  <div class="card__inner flip-card__inner">
+                    <div class="flip-card__face flip-card__face--front">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                    <div class="flip-card__face flip-card__face--back">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <div class="capability-meta">
+                  <h3 class="capability-title">Image Editing</h3>
+                  <p class="capability-desc">
+                    Edits images with natural language instructions while preserving identity and structure.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 6) ASR & TTS -->
+              <div class="generic-card-group-container">
+                <article class="card card--general flip-card js-flip-card" data-flip-delay="650" tabindex="0">
+                  <div class="card__inner flip-card__inner">
+                    <div class="flip-card__face flip-card__face--front">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                    <div class="flip-card__face flip-card__face--back">
+                      <div class="cap-icon">
+                        <figure class="media__container"><span class="media-icon__symbol" aria-hidden="true"></span></figure>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <div class="capability-meta">
+                  <h3 class="capability-title">ASR &amp; TTS</h3>
+                  <p class="capability-desc">
+                    Transcribes speech accurately and synthesizes natural speech from text prompts.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- METHODS -->
+      <section id="methods" class="section section--alt">
+        <div class="container">
+          <h2 class="section__title">Omnimodal Discrete Diffusion Framework</h2>
+          <p class="section__lead">
+            We introduce <strong>Dynin-Omni</strong>, an omnimodal foundation model that unifies understanding and generation across
+            <strong>text</strong>, <strong>image/video</strong>, and <strong>speech</strong> using a single <strong>discrete masked-diffusion</strong>
+            Transformer. By operating directly in a shared token space and refining predictions in parallel through iterative denoising,
+            Dynin-Omni enables efficient decoding, flexible output lengths, and native cross-modal generation without switching to separate
+            modality-specific backbones.
+          </p>
+
+          <div class="prose">
+            <h3 class="method__title">Omnimodal Discrete Diffusion</h3>
+            <p>
+              Our framework formulates omnimodal generation as a <strong>masked token denoising</strong> process over discrete sequences.
+              Instead of left-to-right autoregression, the model starts from heavily-masked outputs and progressively reconstructs tokens via
+              repeated refinement steps. This discrete diffusion view provides two practical advantages: (1) <strong>parallelism</strong>—many
+              tokens can be updated simultaneously for fast decoding; and (2) <strong>editability</strong>—uncertain regions can be re-masked
+              and corrected, making the process robust and controllable across modalities while preserving high-confidence predictions.
+            </p>
+
+            <h3 class="method__title">Unified Token Space & Architecture</h3>
+            <p>
+              Dynin-Omni maps each modality into a <strong>single discrete token space</strong> using modality tokenizers (text, vision, speech),
+              and trains a unified Transformer to predict masked tokens with a standard cross-entropy objective. The same backbone therefore
+              supports both <strong>understanding</strong> (conditioning on observed tokens) and <strong>generation</strong> (iteratively filling
+              masked outputs) for all modalities, enabling native cross-modal tasks (e.g., image→text, text→image, speech→text) without
+              hand-designed bridging modules.
+            </p>
+
+            <!-- Figure: Main architecture -->
+            <figure class="figure">
+              <img
+                class="figure__img"
+                src="./Fig_stage.png"
+                alt="Three-stage training pipeline highlighting model merging between modality adaptation and omnimodal SFT."
+                loading="lazy"
+              />
+            </figure>
+
+            <h3 class="method__title">Training Pipeline with Modality-Disentangled Model Merging</h3>
+            <p>
+              We build Dynin-Omni through a staged pipeline that emphasizes <strong>model merging</strong> as the key step for native omnimodal
+              unification. Stage 1 adapts modality-specific components while maintaining a strong text-centric backbone. We then apply
+              <strong>modality-disentangled merging</strong> to combine complementary weights without overwriting the backbone’s knowledge,
+              producing an initialization that is both stable and omnimodally aligned. Stage 2 performs omnimodal SFT for joint training across
+              modalities, and Stage 3 continues capability growth (e.g., reasoning, higher-resolution generation, longer speech) via continual SFT.
+            </p>
+
+            <!-- Figure: Stages (highlight merging) -->
+            <figure class="figure">
+              <img
+                class="figure__img"
+                src="./Fig_main_arch.png"
+                alt="Dynin-Omni main architecture: unified training with tokenizers and discrete diffusion inference for text, image, and speech."
+                loading="lazy"
+              />
+            </figure>
+
+            <h3 class="method__title">Inference: Modality-Aware Parallel Decoding</h3>
+            <p>
+              At inference, Dynin-Omni performs iterative denoising with <strong>confidence-based remasking</strong>, updating low-confidence
+              positions while keeping confident tokens fixed. We use modality-aware schedules: <strong>block-wise parallel decoding</strong> for
+              temporally ordered sequences (text and speech) and <strong>fully parallel decoding</strong> for spatial grids (image/video tokens).
+              After diffusion decoding, modality detokenizers convert predicted tokens back to the final outputs, yielding a single, consistent
+              generation procedure across omnimodal tasks.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS -->
+      <section id="results" class="section">
+        <div class="container">
+          <h2 class="section__title">Experiments</h2>
+          <p class="section__lead">
+            We evaluate VIRST with comprehensive experimental settings, benchmark comparisons, and ablation studies.
+          </p>
+
+          <div class="prose">
+            <h3 class="method__title">Experimental Settings</h3>
+            <p>
+              In our experiments, the vision-language backbone is initialized with VideoChat-Flash-7B, whose vision encoder is a ViT-based model pretrained with UMT, while the mask prediction branch adopts SAM2.
+              Low-rank adaptation (LoRA) is applied for efficient fine-tuning, and the STF module is trained from scratch.
+            </p>
+            <p>
+              The training corpus includes Ref-DAVIS17, Ref-YouTube-VOS, MeViS, ReVOS, and LV-VIS, together with RefCOCO/RefCOCO+/RefCOCOg, ADE20K, COCO-Stuff, PACO, PASCAL-Part, ReasonSeg, and VideoLLaVA-Instruct.
+              Training is conducted on eight NVIDIA H100 GPUs for three days. Additional implementation details are provided in the appendix.
+            </p>
+
+            <figure class="figure">
+              <img class="figure__img" src="./main_result.png" alt="ST-attention visualization placeholder" />
+              <figcaption class="figure__cap">
+                <span class="cap__label">Figure.</span> ST attention visualization placeholder (`fig_st_attention`).
+              </figcaption>
+            </figure>
+
+            <h3 class="method__title">Referring Video Object Segmentation</h3>
+            <p>
+              We evaluate on ReVOS, MeViS, Ref-YT-VOS, and Ref-DAVIS17. Across all settings, VIRST achieves consistent state-of-the-art-level performance and strong margins over previous methods.
+            </p>
+            <p>
+              On ReVOS, which contains reasoning-heavy queries, VIRST performs strongly on both referring and reasoning settings, with larger gains in reasoning-oriented cases.
+              On MeViS, Ref-YT-VOS, and Ref-DAVIS17, it also maintains leading performance and stable cross-dataset generalization.
+            </p>
+            <p>
+              Placeholder tables included in this section: `tab_ablation_fusion`, `tab_ablation_selection`, and `tab_ablation_keyframe_num`.
+            </p>
+
+            <h3 class="method__title">Image Segmentation</h3>
+            <p>
+              We further evaluate on RefCOCO, RefCOCO+, RefCOCOg, and ReasonSeg to test whether the design generalizes beyond videos.
+              VIRST shows strong performance on major splits while remaining competitive across all reported settings.
+            </p>
+
+            <h3 class="method__title">Ablation Studies</h3>
+            <p>
+              <strong>Effect of STF.</strong> We ablate Initial Fusion and ST-Fusion separately.
+              Removing either component degrades \(\mathcal{J}\&\mathcal{F}\), while enabling both yields clear gains in spatio-temporal reasoning and alignment quality.
+            </p>
+            <p>
+              <strong>Effect of TDAU.</strong> We compare first-frame, CLIP-based, random-3, uniform-3, and dynamic anchor strategies.
+              Dynamic anchor selection is most robust, especially on motion-heavy videos.
+            </p>
+            <p>
+              <strong>Effect of anchor count.</strong> Increasing \(\alpha\) consistently improves performance by expanding temporal coverage.
+              This also acts as an inference-time scaling knob: larger \(\alpha\) trades additional compute for improved reliability.
+            </p>
+          </div>
+
+          <figure class="figure">
+            <img class="figure__img figure__img--tall" src="./main_result.png" alt="Main result figure (detailed view)" />
+            <figcaption class="figure__cap">
+              <span class="cap__label">Figure 2.</span> Main experiment result placeholder (`main_result.pdf` preview image).
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer__wrap footer__top">
+        <div class="footer__links">
+          <div class="footer__col">
+            <div class="footer__head">Project</div>
+            <a href="#overview">Overview</a>
+            <a href="#methods">Methods</a>
+            <a href="#results">Experiments</a>
+          </div>
+          <div class="footer__col">
+            <div class="footer__head">AIDAS Lab</div>
+            <a href="https://aidas.snu.ac.kr" target="_blank" rel="noopener noreferrer">AIDAS Lab Website</a>
+            <span>Seoul National University</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <div class="footer__wrap footer__bottom-inner">
+          <div>© 2026 OMaDA Project</div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        const cards = document.querySelectorAll(".js-flip-card");
+        const timers = new WeakMap();
+    
+        function getDelay(el) {
+          const d = parseInt(el.getAttribute("data-flip-delay") || "650", 10);
+          return Number.isFinite(d) ? d : 650;
+        }
+    
+        cards.forEach((card) => {
+          card.addEventListener("mouseenter", () => {
+            const delay = getDelay(card);
+            const t = window.setTimeout(() => card.classList.add("is-flipped"), delay);
+            timers.set(card, t);
+          });
+    
+          card.addEventListener("mouseleave", () => {
+            const t = timers.get(card);
+            if (t) window.clearTimeout(t);
+            card.classList.remove("is-flipped");
+          });
+    
+          // Optional: keyboard accessibility (focus triggers flip after delay)
+          card.addEventListener("focusin", () => {
+            const delay = getDelay(card);
+            const t = window.setTimeout(() => card.classList.add("is-flipped"), delay);
+            timers.set(card, t);
+          });
+          card.addEventListener("focusout", () => {
+            const t = timers.get(card);
+            if (t) window.clearTimeout(t);
+            card.classList.remove("is-flipped");
+          });
+        });
+      })();
+    </script>
+    <div class="img-modal" id="imgModal" aria-hidden="true">
+      <div class="img-modal__backdrop" data-close-modal></div>
+    
+      <div class="img-modal__dialog" role="dialog" aria-modal="true" aria-label="Image preview">
+        <button class="img-modal__close" type="button" data-close-modal aria-label="Close">×</button>
+        <img class="img-modal__img" id="imgModalImg" alt="" />
+      </div>
+    </div>
+  </body>
+</html>
