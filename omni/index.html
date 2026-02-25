@@ -678,10 +678,7 @@
             <section id="ex-image-generation" class="collection-container" data-collection>
               <div class="collection-title">
                 <h3>Image Generation</h3>
-              </div>
-              <p class="collection-desc">
-                Text-to-image samples (auto-flipping). Each slot cycles through {i, i+10, i+20} with randomized timing.
-              </p>
+              </div>              
 
               <div class="collection-surface">
                 <!-- 2 x 5 grid -->
@@ -905,8 +902,8 @@
                 const swapAtMs = Math.floor(flipDurationMs * 0.52); // swap image near mid-flip
 
                 // random schedule per card: each flip occurs between [min,max] ms
-                const MIN_WAIT = 1400;
-                const MAX_WAIT = 4200;
+                const MIN_WAIT = 5000;
+                const MAX_WAIT = 12000;
 
                 const setFaceImg = (card, face, n) => {
                   const img = card.querySelector(face === "front" ? ".ig-face--front img" : ".ig-face--back img");
