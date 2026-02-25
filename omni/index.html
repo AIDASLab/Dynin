@@ -543,20 +543,15 @@
       <section id="methods" class="section section--alt">
         <div class="container">
           <h2 class="section__title">Omnimodal Discrete Diffusion</h2>
-          <p class="section__lead">
-            We introduce <strong>Dynin-Omni</strong>, an omnimodal foundation model that unifies understanding and generation across
-            <strong>text</strong>, <strong>image/video</strong>, and <strong>speech</strong> using a single <strong>discrete masked-diffusion</strong>
-            model. By operating directly in a shared token space and refining predictions in parallel through iterative denoising,
-            Dynin-Omni enables native cross-modal generation without switching to separate modality-specific backbones.
-          </p>
 
           <div class="prose">
-            <h3 class="method__title">Omnimodal Discrete Diffusion</h3>
+
             <p>
-              Our framework formulates omnimodal generation as a <strong>masked token denoising</strong> process over discrete sequences.
-              Instead of left-to-right autoregression, the model starts from heavily-masked outputs and progressively reconstructs tokens via
-              repeated refinement steps. This discrete diffusion view provides two practical advantages: (1) <strong>parallelism</strong>—many
-              tokens can be updated simultaneously; and (2) <strong>editability</strong>—uncertain regions can be easily corrected, making the process robust and controllable across modalities.
+              <strong>Dynin-Omni</strong> models omnimodal generation as
+              <strong>masked token denoising</strong> over discrete sequences.
+              Instead of autoregression, it iteratively refines masked tokens
+              in parallel—enabling scalable and controllable generation across
+              text, image, video, and speech.
             </p>
 
             <!-- Figure: Architecture Comparison -->
@@ -567,53 +562,25 @@
                 alt="Architecture comparison"
                 loading="lazy"
               />
-            </figure>           
+            </figure>
 
             <h3 class="method__title">Unified Token Space & Architecture</h3>
             <p>
-              <strong>Dynin-Omni</strong> maps each modality into a <strong>single discrete token space</strong>,
-              and trains a unified Transformer to predict masked tokens with a standard cross-entropy objective. The same backbone therefore
-              supports both <strong>understanding</strong> and <strong>generation</strong> for all modalities, enabling native cross-modal 
-              tasks (e.g., image→text, text→image, speech→text) without hand-designed bridging modules.
-            </p>
-
-            <h3 class="method__title">Inference: Modality-Aware Parallel Decoding</h3>
-            <p>
-              At inference, Dynin-Omni performs iterative denoising with <strong>confidence-based remasking</strong>, updating low-confidence
-              positions while keeping confident tokens fixed. We use modality-aware schedules: <strong>block-wise parallel decoding</strong> for
-              temporally ordered sequences (text and speech) and <strong>fully parallel decoding</strong> for spatial grids (image/video tokens).
-              After diffusion decoding, modality detokenizers convert predicted tokens back to the final outputs, yielding a single, consistent
-              generation procedure across omnimodal tasks.
+              All modalities are mapped into a <strong>shared discrete token space</strong>
+              and processed by a single Transformer backbone,
+              enabling unified understanding and native cross-modal generation.
             </p>
 
             <!-- Figure: Main architecture -->
             <figure class="figure">
               <img
                 class="figure__img"
-                src="./assets//Fig_main_arch.png"
-                alt="Dynin-Omni main architecture: unified training with tokenizers and discrete diffusion inference for text, image, and speech."
+                src="./assets/Fig_main_arch.png"
+                alt="Dynin-Omni unified architecture"
                 loading="lazy"
               />
-            </figure>            
+            </figure>
 
-            <h3 class="method__title">Training Pipeline with Modality-Disentangled Model Merging</h3>
-            <p>
-              We build Dynin-Omni through a staged pipeline that emphasizes <strong>model merging</strong> as the key step for native omnimodal
-              unification. Stage 1 adapts modality-specific components while maintaining a strong text-centric backbone. We then apply
-              <strong>modality-disentangled merging</strong> to combine complementary weights without overwriting the backbone’s knowledge,
-              producing an initialization that is both stable and omnimodally aligned. Stage 2 performs omnimodal SFT for joint training across
-              modalities, and Stage 3 continues capability growth via continual SFT.
-            </p>
-
-            <!-- Figure: Stages (highlight merging) -->
-            <figure class="figure">
-              <img
-                class="figure__img"
-                src="./assets/Fig_stage.png"
-                alt="Three-stage training pipeline highlighting model merging between modality adaptation and omnimodal SFT."
-                loading="lazy"
-              />
-            </figure>            
           </div>
         </div>
       </section>
@@ -621,7 +588,7 @@
       <!-- RESULTS -->
       <section id="results" class="section">
         <div class="container">
-          <h2 class="section__title">Experiments</h2>
+          <h2 class="section__title">Performance</h2>
           <p class="section__lead">
             We evaluate VIRST with comprehensive experimental settings, benchmark comparisons, and ablation studies.
           </p>
