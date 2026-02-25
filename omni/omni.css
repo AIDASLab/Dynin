@@ -797,11 +797,14 @@
 
   /* Each modality section block */
   #examples .collection-container {
+    margin-top: 120px;
     margin-bottom: 22px;
   }
 
   /* Title band (similar to your reference) */
   #examples .collection-title{
+    text-align: center;
+    margin-bottom: 32px;
     background: transparent !important;
     border: 0 !important;
     padding: 0 !important;
@@ -810,6 +813,9 @@
   }
 
   #examples .collection-title h3{
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 14px;
     background: transparent !important;
     border: 0 !important;
     padding: 0 !important;
