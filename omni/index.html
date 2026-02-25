@@ -542,13 +542,12 @@
       <!-- METHODS -->
       <section id="methods" class="section section--alt">
         <div class="container">
-          <h2 class="section__title">Omnimodal Discrete Diffusion Framework</h2>
+          <h2 class="section__title">Omnimodal Discrete Diffusion</h2>
           <p class="section__lead">
             We introduce <strong>Dynin-Omni</strong>, an omnimodal foundation model that unifies understanding and generation across
             <strong>text</strong>, <strong>image/video</strong>, and <strong>speech</strong> using a single <strong>discrete masked-diffusion</strong>
-            Transformer. By operating directly in a shared token space and refining predictions in parallel through iterative denoising,
-            Dynin-Omni enables efficient decoding, flexible output lengths, and native cross-modal generation without switching to separate
-            modality-specific backbones.
+            model. By operating directly in a shared token space and refining predictions in parallel through iterative denoising,
+            Dynin-Omni enables native cross-modal generation without switching to separate modality-specific backbones.
           </p>
 
           <div class="prose">
@@ -557,47 +556,26 @@
               Our framework formulates omnimodal generation as a <strong>masked token denoising</strong> process over discrete sequences.
               Instead of left-to-right autoregression, the model starts from heavily-masked outputs and progressively reconstructs tokens via
               repeated refinement steps. This discrete diffusion view provides two practical advantages: (1) <strong>parallelism</strong>—many
-              tokens can be updated simultaneously for fast decoding; and (2) <strong>editability</strong>—uncertain regions can be re-masked
-              and corrected, making the process robust and controllable across modalities while preserving high-confidence predictions.
+              tokens can be updated simultaneously; and (2) <strong>editability</strong>—uncertain regions can be easily corrected, making the process robust and controllable across modalities.
             </p>
+
+            <!-- Figure: Architecture Comparison -->
+            <figure class="figure">
+              <img
+                class="figure__img"
+                src="./assets/arch_compare.gif"
+                alt="Architecture comparison"
+                loading="lazy"
+              />
+            </figure>           
 
             <h3 class="method__title">Unified Token Space & Architecture</h3>
             <p>
-              Dynin-Omni maps each modality into a <strong>single discrete token space</strong> using modality tokenizers (text, vision, speech),
+              <strong>Dynin-Omni</strong> maps each modality into a <strong>single discrete token space</strong>,
               and trains a unified Transformer to predict masked tokens with a standard cross-entropy objective. The same backbone therefore
-              supports both <strong>understanding</strong> (conditioning on observed tokens) and <strong>generation</strong> (iteratively filling
-              masked outputs) for all modalities, enabling native cross-modal tasks (e.g., image→text, text→image, speech→text) without
-              hand-designed bridging modules.
+              supports both <strong>understanding</strong> and <strong>generation</strong> for all modalities, enabling native cross-modal 
+              tasks (e.g., image→text, text→image, speech→text) without hand-designed bridging modules.
             </p>
-
-            <!-- Figure: Main architecture -->
-            <figure class="figure">
-              <img
-                class="figure__img"
-                src="./Fig_stage.png"
-                alt="Three-stage training pipeline highlighting model merging between modality adaptation and omnimodal SFT."
-                loading="lazy"
-              />
-            </figure>
-
-            <h3 class="method__title">Training Pipeline with Modality-Disentangled Model Merging</h3>
-            <p>
-              We build Dynin-Omni through a staged pipeline that emphasizes <strong>model merging</strong> as the key step for native omnimodal
-              unification. Stage 1 adapts modality-specific components while maintaining a strong text-centric backbone. We then apply
-              <strong>modality-disentangled merging</strong> to combine complementary weights without overwriting the backbone’s knowledge,
-              producing an initialization that is both stable and omnimodally aligned. Stage 2 performs omnimodal SFT for joint training across
-              modalities, and Stage 3 continues capability growth (e.g., reasoning, higher-resolution generation, longer speech) via continual SFT.
-            </p>
-
-            <!-- Figure: Stages (highlight merging) -->
-            <figure class="figure">
-              <img
-                class="figure__img"
-                src="./Fig_main_arch.png"
-                alt="Dynin-Omni main architecture: unified training with tokenizers and discrete diffusion inference for text, image, and speech."
-                loading="lazy"
-              />
-            </figure>
 
             <h3 class="method__title">Inference: Modality-Aware Parallel Decoding</h3>
             <p>
@@ -607,6 +585,35 @@
               After diffusion decoding, modality detokenizers convert predicted tokens back to the final outputs, yielding a single, consistent
               generation procedure across omnimodal tasks.
             </p>
+
+            <!-- Figure: Main architecture -->
+            <figure class="figure">
+              <img
+                class="figure__img"
+                src="./assets//Fig_main_arch.png"
+                alt="Dynin-Omni main architecture: unified training with tokenizers and discrete diffusion inference for text, image, and speech."
+                loading="lazy"
+              />
+            </figure>            
+
+            <h3 class="method__title">Training Pipeline with Modality-Disentangled Model Merging</h3>
+            <p>
+              We build Dynin-Omni through a staged pipeline that emphasizes <strong>model merging</strong> as the key step for native omnimodal
+              unification. Stage 1 adapts modality-specific components while maintaining a strong text-centric backbone. We then apply
+              <strong>modality-disentangled merging</strong> to combine complementary weights without overwriting the backbone’s knowledge,
+              producing an initialization that is both stable and omnimodally aligned. Stage 2 performs omnimodal SFT for joint training across
+              modalities, and Stage 3 continues capability growth via continual SFT.
+            </p>
+
+            <!-- Figure: Stages (highlight merging) -->
+            <figure class="figure">
+              <img
+                class="figure__img"
+                src="./assets/Fig_stage.png"
+                alt="Three-stage training pipeline highlighting model merging between modality adaptation and omnimodal SFT."
+                loading="lazy"
+              />
+            </figure>            
           </div>
         </div>
       </section>
@@ -624,58 +631,9 @@
             <p>
               In our experiments, the vision-language backbone is initialized with VideoChat-Flash-7B, whose vision encoder is a ViT-based model pretrained with UMT, while the mask prediction branch adopts SAM2.
               Low-rank adaptation (LoRA) is applied for efficient fine-tuning, and the STF module is trained from scratch.
-            </p>
-            <p>
-              The training corpus includes Ref-DAVIS17, Ref-YouTube-VOS, MeViS, ReVOS, and LV-VIS, together with RefCOCO/RefCOCO+/RefCOCOg, ADE20K, COCO-Stuff, PACO, PASCAL-Part, ReasonSeg, and VideoLLaVA-Instruct.
-              Training is conducted on eight NVIDIA H100 GPUs for three days. Additional implementation details are provided in the appendix.
-            </p>
-
-            <figure class="figure">
-              <img class="figure__img" src="./main_result.png" alt="ST-attention visualization placeholder" />
-              <figcaption class="figure__cap">
-                <span class="cap__label">Figure.</span> ST attention visualization placeholder (`fig_st_attention`).
-              </figcaption>
-            </figure>
-
-            <h3 class="method__title">Referring Video Object Segmentation</h3>
-            <p>
-              We evaluate on ReVOS, MeViS, Ref-YT-VOS, and Ref-DAVIS17. Across all settings, VIRST achieves consistent state-of-the-art-level performance and strong margins over previous methods.
-            </p>
-            <p>
-              On ReVOS, which contains reasoning-heavy queries, VIRST performs strongly on both referring and reasoning settings, with larger gains in reasoning-oriented cases.
-              On MeViS, Ref-YT-VOS, and Ref-DAVIS17, it also maintains leading performance and stable cross-dataset generalization.
-            </p>
-            <p>
-              Placeholder tables included in this section: `tab_ablation_fusion`, `tab_ablation_selection`, and `tab_ablation_keyframe_num`.
-            </p>
-
-            <h3 class="method__title">Image Segmentation</h3>
-            <p>
-              We further evaluate on RefCOCO, RefCOCO+, RefCOCOg, and ReasonSeg to test whether the design generalizes beyond videos.
-              VIRST shows strong performance on major splits while remaining competitive across all reported settings.
-            </p>
-
-            <h3 class="method__title">Ablation Studies</h3>
-            <p>
-              <strong>Effect of STF.</strong> We ablate Initial Fusion and ST-Fusion separately.
-              Removing either component degrades \(\mathcal{J}\&\mathcal{F}\), while enabling both yields clear gains in spatio-temporal reasoning and alignment quality.
-            </p>
-            <p>
-              <strong>Effect of TDAU.</strong> We compare first-frame, CLIP-based, random-3, uniform-3, and dynamic anchor strategies.
-              Dynamic anchor selection is most robust, especially on motion-heavy videos.
-            </p>
-            <p>
-              <strong>Effect of anchor count.</strong> Increasing \(\alpha\) consistently improves performance by expanding temporal coverage.
-              This also acts as an inference-time scaling knob: larger \(\alpha\) trades additional compute for improved reliability.
-            </p>
+            </p>            
           </div>
-
-          <figure class="figure">
-            <img class="figure__img figure__img--tall" src="./main_result.png" alt="Main result figure (detailed view)" />
-            <figcaption class="figure__cap">
-              <span class="cap__label">Figure 2.</span> Main experiment result placeholder (`main_result.pdf` preview image).
-            </figcaption>
-          </figure>
+          
         </div>
       </section>
 
