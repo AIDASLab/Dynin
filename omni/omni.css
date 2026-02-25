@@ -476,26 +476,30 @@
   }
   
   /* ===============================
-     Capabilities (Gemini-style cards)
-     - Card: icon only (flip preserved)
-     - Text: title + description below
+    Capabilities (Gemini-style cards)
+    - Card: icon only (flip preserved)
+    - Text: title + description below
+    - FIXES:
+      1) back face actually shows (translateZ + strict 3D context)
+      2) back button clickable only when flipped (pointer-events)
+      3) icon perfectly centered (container controls)
   ================================ */
-  
-  /* 2x3 grid (targets your existing HTML container) */
+
+  /* 2x3 grid */
   #capabilities .card-group__cards {
     margin-top: 18px;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
   }
-  
+
   /* Each grid item stacks: [card] then [text] */
   #capabilities .generic-card-group-container {
     width: 100%;
     display: flex;
     flex-direction: column;
   }
-  
+
   /* Responsive */
   @media (max-width: 860px) {
     #capabilities .card-group__cards {
@@ -507,52 +511,70 @@
       grid-template-columns: 1fr;
     }
   }
-  
-  /* Flip wrapper */
+
+  /* Flip wrapper provides perspective */
   #capabilities .flip-card {
     perspective: 1200px;
     display: block;
     cursor: pointer;
   }
-  
-  /* Card box */
+
+  /* Rotating element (MUST contain both faces) */
   #capabilities .flip-card__inner {
     position: relative;
     width: 100%;
     min-height: 210px;
-  
+
     transform-style: preserve-3d;
     transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
-  
+
     border-radius: var(--radius);
     border: 1px solid rgba(17, 24, 39, 0.10);
     background: #fff;
     box-shadow: 0 10px 26px rgba(2, 6, 23, 0.06);
     overflow: hidden;
+
+    /* helps some browsers keep 3D stable */
+    will-change: transform;
   }
-  
+
   /* Flip state */
   #capabilities .flip-card.is-flipped .flip-card__inner {
     transform: rotateY(180deg);
   }
-  
-  /* Faces (icon-only, centered) */
+
+  /* Faces (must fully cover) */
   #capabilities .flip-card__face {
     position: absolute;
     inset: 0;
-  
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-  
+
     display: grid;
     place-items: center;
     padding: 18px;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    /* keep 3D context consistent */
+    transform-style: preserve-3d;
   }
-  
-  #capabilities .flip-card__face--front { transform: rotateY(0deg); }
-  #capabilities .flip-card__face--back  { transform: rotateY(180deg); }
-  
-  /* Icon sizing (works with your existing figure/icon markup) */
+
+  /* IMPORTANT: translateZ avoids z-fighting (front bleeding through back) */
+  #capabilities .flip-card__face--front {
+    transform: rotateY(0deg) translateZ(1px);
+  }
+  #capabilities .flip-card__face--back {
+    transform: rotateY(180deg) translateZ(1px);
+  }
+
+  /* Make only the visible face clickable (so back button works) */
+  #capabilities .flip-card__face--back { pointer-events: none; }
+  #capabilities .flip-card__face--front { pointer-events: auto; }
+
+  #capabilities .flip-card.is-flipped .flip-card__face--front { pointer-events: none; }
+  #capabilities .flip-card.is-flipped .flip-card__face--back  { pointer-events: auto; }
+
+  /* Center the icon regardless of nested wrappers */
   #capabilities .cap-icon {
     width: 100%;
     height: 100%;
@@ -560,19 +582,25 @@
     align-items: center;
     justify-content: center;
   }
-  
+
+  /* If you use .cap-icon__img, make it fill its immediate container nicely */
+  #capabilities .cap-icon__img{
+    width: 96px;           /* tweak as you like */
+    height: 96px;          /* keep square for nicer centering */
+    object-fit: contain;
+    display: block;
+  }
+
   /* Title + description BELOW the card */
   #capabilities .capability-meta {
     margin-top: 12px;
   }
-  
   #capabilities .capability-title {
     margin: 0 0 6px;
     font-size: 1rem;
     font-weight: 800;
     letter-spacing: -0.02em;
   }
-  
   #capabilities .capability-desc {
     margin: 0;
     font-size: 0.9rem;
@@ -580,9 +608,8 @@
     font-weight: 500;
     line-height: 1.55;
   }
-  
-  /* Hover lift WITHOUT breaking flip:
-     (do NOT set transform here; it overrides rotateY) */
+
+  /* Hover lift WITHOUT breaking flip (no transform here) */
   #capabilities .flip-card:hover .flip-card__inner {
     box-shadow: 0 14px 34px rgba(2, 6, 23, 0.10);
     border-color: rgba(15, 15, 112, 0.18);
