@@ -1169,17 +1169,14 @@
         <div class="container">
           <h2 class="section__title">Performance</h2>
           <p class="section__lead">
-            We evaluate VIRST with comprehensive experimental settings, benchmark comparisons, and ablation studies.
-          </p>
+            <strong>Dynin-Omni</strong> consistently achieves state-of-the-art or highly competitive results across a broad range of text, vision, 
+            video, and speech benchmarks, outperforming existing open-source unified models and narrowing the gap with modality-specific 
+            expert systems.
+          </p>          
 
-          <div class="prose">
-            <h3 class="method__title">Experimental Settings</h3>
-            <p>
-              In our experiments, the vision-language backbone is initialized with VideoChat-Flash-7B, whose vision encoder is a ViT-based model pretrained with UMT, while the mask prediction branch adopts SAM2.
-              Low-rank adaptation (LoRA) is applied for efficient fine-tuning, and the STF module is trained from scratch.
-            </p>            
-          </div>
-          
+          <figure class="figure">
+            <img class="figure__img" src="./assets/Fig_benchmark.png" alt="benchmark figure" />
+          </figure>          
         </div>
       </section>
 
