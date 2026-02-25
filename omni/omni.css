@@ -616,7 +616,7 @@
   }
 
   /* ===============================
-    Examples: modality nav + panels
+   Examples: gallery nav + stacked collections
   ================================ */
 
   /* Offset when jumping via hash */
@@ -624,8 +624,14 @@
     scroll-margin-top: 96px; /* adjust if you have fixed header */
   }
 
+  /* Each target section should also respect offset */
+  #examples .collection-container,
+  #examples [data-collection]{
+    scroll-margin-top: 96px; /* same as #examples */
+  }
+
   /* =========================================
-    GALLERY-STYLE NAVIGATOR
+    GALLERY-STYLE NAVIGATOR (sticky)
   ========================================= */
 
   #examples .gallery-nav-container {
@@ -636,16 +642,14 @@
     margin-bottom: 18px;
   }
 
-  /* Placeholder prevents layout jump when sticky */
+  /* Optional placeholder (only needed if you do layout tricks).
+    If you keep it, it just provides vertical breathing room. */
   #examples .gallery-nav-placeholder {
     width: 100%;
     height: 52px;
   }
-
   @media (min-width: 640px) {
-    #examples .gallery-nav-placeholder {
-      height: 60px;
-    }
+    #examples .gallery-nav-placeholder { height: 60px; }
   }
 
   /* Sticky wrapper */
@@ -662,7 +666,7 @@
     border-radius: 14px;
     border: 1px solid rgba(15, 15, 112, 0.10);
 
-    transition: box-shadow 200ms ease, transform 120ms ease;
+    transition: box-shadow 200ms ease, transform 120ms ease, border-color 200ms ease;
     will-change: transform, position;
   }
 
@@ -671,7 +675,7 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10);
   }
 
-  /* Layout row */
+  /* Row inside wrapper */
   #examples .gallery-nav-row {
     display: flex;
     justify-content: center;
@@ -691,12 +695,13 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  #examples .nav-buttons::-webkit-scrollbar { display: none; }
 
-  #examples .nav-buttons::-webkit-scrollbar {
-    display: none;
-  }
+  /* =========================================
+    NAV BUTTONS (use <a> or <button>)
+    If you use <a href="#...">, these styles apply too.
+  ========================================= */
 
-  /* Base pill */
   #examples .nav-button {
     position: relative;
     flex-shrink: 0;
@@ -704,6 +709,7 @@
     border-radius: 999px;
 
     padding: 0 14px;
+
     border: 1px solid transparent;
     background: transparent;
 
@@ -715,9 +721,17 @@
     line-height: 32px;
     color: rgba(17, 24, 39, 0.85);
 
-    transition: background-color 200ms ease,
-                border-color 200ms ease,
-                transform 120ms ease;
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      transform 120ms ease,
+      color 200ms ease;
+
+    /* for <a> */
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Hover */
@@ -734,9 +748,10 @@
   #examples .nav-button-active {
     background: #F5F5F5;
     border-color: rgba(0, 0, 0, 0.06);
+    color: rgba(17, 24, 39, 0.92);
   }
 
-  /* Optional background span */
+  /* Optional background span (if you use it) */
   #examples .nav-button__bg {
     position: absolute;
     inset: 0;
@@ -748,7 +763,7 @@
     position: relative;
     z-index: 1;
     display: inline-block;
-    max-width: 220px;
+    max-width: 240px;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
@@ -761,12 +776,10 @@
       padding-left: 12px;
       padding-right: 12px;
     }
-
     #examples .nav-buttons {
       justify-content: flex-start;
     }
   }
-
   @media (min-width: 640px) {
     #examples .nav-buttons {
       justify-content: center;
@@ -774,52 +787,57 @@
   }
 
   /* =========================================
-    PANELS
+    STACKED EXAMPLE COLLECTIONS (not tabs)
   ========================================= */
 
-  #examples .examples-panels {
-    margin-top: 12px;
+  #examples .examples-collections {
+    margin-top: 14px;
   }
 
-  /* Panel container */
-  #examples .examples-panel {
-    display: none;
+  /* Each modality section block */
+  #examples .collection-container {
+    margin-bottom: 22px;
+  }
+
+  /* Title band (similar to your reference) */
+  #examples .collection-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 16px 10px;
+    border-radius: 14px;
+
+    border: 1px solid rgba(15, 15, 112, 0.10);
+    background: rgba(15, 15, 112, 0.02);
+
+    margin-bottom: 12px;
+  }
+
+  #examples .collection-title h3 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    color: rgba(17, 24, 39, 0.90);
+  }
+
+  /* Intro text per modality */
+  #examples .collection-desc {
+    margin: 0 0 12px 0;
+    color: rgba(17, 24, 39, 0.72);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  /* Example content shell (your later UI goes inside) */
+  #examples .collection-surface {
     border-radius: 16px;
-    border: 1px solid rgba(15, 15, 112, 0.12);
+    border: 1px solid rgba(15, 15, 112, 0.10);
     background: rgba(15, 15, 112, 0.02);
     overflow: hidden;
-    transition: opacity 200ms ease;
   }
 
-  #examples .examples-panel.is-active {
-    display: block;
-  }
-
-  /* Header */
-  #examples .examples-panel__head {
-    padding: 16px 16px 10px;
-    border-bottom: 1px solid rgba(15, 15, 112, 0.10);
-    background: rgba(255, 255, 255, 0.55);
-  }
-
-  #examples .examples-panel__title {
-    margin: 0;
-    font-size: 18px;
-    letter-spacing: -0.01em;
-  }
-
-  #examples .examples-panel__desc {
-    margin: 6px 0 0;
-    font-size: 14px;
-    color: rgba(17, 24, 39, 0.70);
-  }
-
-  /* Body */
-  #examples .examples-panel__body {
-    padding: 16px;
-  }
-
-  /* Placeholder box (remove later) */
+  /* Placeholder you can remove later */
   #examples .examples-placeholder__box {
     height: 280px;
     border-radius: 14px;
@@ -829,12 +847,16 @@
     place-items: center;
     color: rgba(17, 24, 39, 0.55);
     font-weight: 650;
+    margin: 16px;
   }
 
-  /* Mobile: make pills easier to scroll */
+  /* Optional: subtle divider between blocks on small screens */
   @media (max-width: 560px) {
-    #examples .examples-nav__inner {
-      border-radius: 16px;
+    #examples .collection-title {
+      padding: 14px 10px;
+    }
+    #examples .collection-title h3 {
+      font-size: 18px;
     }
   }
   
