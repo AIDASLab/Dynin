@@ -986,11 +986,168 @@
               <div class="collection-title">
                 <h3>Image Editing</h3>
               </div>
-              <p class="collection-desc">Placeholder — add your image editing examples here.</p>
+              <p class="collection-desc">
+                Long-form edit demos (auto-fading). Randomly rotates through 5 examples every ~5s.
+              </p>
+
               <div class="collection-surface">
-                <div class="examples-placeholder__box">Input image + instruction → edited image</div>
+                <div class="ie-stage" id="ieStage" aria-label="Image editing sample (auto-fade)">
+                  <!-- bottom/current -->
+                  <img
+                    class="ie-img ie-img--a"
+                    src="assets/examples/img_edit_1.png"
+                    alt="Image editing sample 1"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <!-- top/next -->
+                  <img
+                    class="ie-img ie-img--b"
+                    src="assets/examples/img_edit_2.png"
+                    alt="Image editing sample 2"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
               </div>
             </section>
+
+            <style>
+              /* ===== Image Editing Auto Fade ===== */
+              #ex-image-editing .ie-stage{
+                position: relative;
+                width: 100%;
+                max-width: 980px; /* feels good for a single long image */
+                margin: 0 auto;
+
+                border-radius: 14px;
+                overflow: hidden;
+
+                border: 1px solid rgba(15, 15, 112, 0.14);
+                background: rgba(15, 15, 112, 0.03);
+              }
+
+              /* keep a stable height while images load (tweak aspect ratio if you know it) */
+              #ex-image-editing .ie-stage::before{
+                content:"";
+                display:block;
+                padding-top: 52%; /* ~wide image; adjust (e.g., 45% / 60%) if needed */
+              }
+
+              #ex-image-editing .ie-img{
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain; /* long screenshot style; use cover if you prefer */
+                display: block;
+                transform: translateZ(0);
+                will-change: opacity;
+              }
+
+              /* default visibilities */
+              #ex-image-editing .ie-img--a{ opacity: 1; }
+              #ex-image-editing .ie-img--b{ opacity: 0; }
+
+              /* fade transition */
+              #ex-image-editing .ie-stage.is-crossfade .ie-img--a{ opacity: 0; }
+              #ex-image-editing .ie-stage.is-crossfade .ie-img--b{ opacity: 1; }
+
+              /* duration set to 5s (your request) */
+              #ex-image-editing .ie-img{
+                transition: opacity 5000ms cubic-bezier(.2,.8,.2,1);
+              }
+
+              /* Reduced motion: disable transitions */
+              @media (prefers-reduced-motion: reduce){
+                #ex-image-editing .ie-img{ transition: none !important; }
+              }
+            </style>
+
+            <script>
+              // ===== Image Editing Auto Fade (random among img_edit_1..5) =====
+              (() => {
+                const stage = document.getElementById("ieStage");
+                if (!stage) return;
+
+                // Safety: only init once
+                if (stage.dataset.ieInit === "1") return;
+                stage.dataset.ieInit = "1";
+
+                const basePath = "assets/examples/img_edit_";
+                const ext = ".png";
+                const N = 5;
+
+                const TRANSITION_MS = 5000;  // fade duration (~5s)
+                const HOLD_MS = 5000;        // time to keep an image fully visible between fades
+                                            // (net: ~10s per change including fade; adjust if you want faster)
+
+                const imgA = stage.querySelector(".ie-img--a");
+                const imgB = stage.querySelector(".ie-img--b");
+                if (!imgA || !imgB) return;
+
+                const preload = (src) => { const im = new Image(); im.src = src; };
+
+                // preload all
+                for (let i = 1; i <= N; i++) preload(`${basePath}${i}${ext}`);
+
+                const pickNext = (curr) => {
+                  // random, but avoid immediate repeats
+                  let nxt = curr;
+                  while (nxt === curr) nxt = 1 + Math.floor(Math.random() * N);
+                  return nxt;
+                };
+
+                let curr = 1;
+                let showingA = true;
+                let timer = null;
+
+                const setImg = (el, idx) => {
+                  el.src = `${basePath}${idx}${ext}`;
+                  el.alt = `Image editing sample ${idx}`;
+                };
+
+                // init: A=curr, B=next (hidden)
+                setImg(imgA, curr);
+                let next = pickNext(curr);
+                setImg(imgB, next);
+
+                const step = () => {
+                  // flip crossfade state (A<->B)
+                  stage.classList.toggle("is-crossfade");
+
+                  // after the fade completes, update the now-hidden layer to the next random image
+                  window.setTimeout(() => {
+                    curr = next;
+                    next = pickNext(curr);
+
+                    // determine which layer is hidden now
+                    // when is-crossfade is ON: B visible, A hidden
+                    // when OFF: A visible, B hidden
+                    const cross = stage.classList.contains("is-crossfade");
+                    const hiddenEl = cross ? imgA : imgB;
+
+                    setImg(hiddenEl, next);
+                  }, TRANSITION_MS + 30);
+
+                  // schedule next cycle: wait for fade to finish + hold time
+                  timer = window.setTimeout(step, TRANSITION_MS + HOLD_MS);
+                };
+
+                // kick off after a small random delay so page doesn’t feel "instant"
+                timer = window.setTimeout(step, 800 + Math.floor(Math.random() * 1200));
+
+                // Respect reduced motion: stop auto-anim if desired
+                const mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+                if (mq && mq.matches) {
+                  if (timer) window.clearTimeout(timer);
+                  stage.classList.remove("is-crossfade");
+                  // show just the first image
+                  setImg(imgA, 1);
+                  setImg(imgB, 1);
+                }
+              })();
+            </script>
 
             <!-- 6) ASR & TTS -->
             <section id="ex-asr-tts" class="collection-container" data-collection>
