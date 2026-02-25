@@ -679,11 +679,310 @@
               <div class="collection-title">
                 <h3>Image Generation</h3>
               </div>
-              <p class="collection-desc">Placeholder — add your text-to-image examples here.</p>
+              <p class="collection-desc">
+                Text-to-image samples (auto-flipping). Each slot cycles through {i, i+10, i+20} with randomized timing.
+              </p>
+
               <div class="collection-surface">
-                <div class="examples-placeholder__box">Prompt → generated image grid</div>
+                <!-- 2 x 5 grid -->
+                <div class="ig-grid" id="igGrid" aria-label="Image generation samples grid">
+                  <!-- slot 1 -->
+                  <div class="ig-card" data-slot="1">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_1.png" alt="Image generation sample 1" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_11.png" alt="Image generation sample 11" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- slot 2 -->
+                  <div class="ig-card" data-slot="2">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_2.png" alt="Image generation sample 2" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_12.png" alt="Image generation sample 12" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- slot 3 -->
+                  <div class="ig-card" data-slot="3">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_3.png" alt="Image generation sample 3" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_13.png" alt="Image generation sample 13" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- slot 4 -->
+                  <div class="ig-card" data-slot="4">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_4.png" alt="Image generation sample 4" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_14.png" alt="Image generation sample 14" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- slot 5 -->
+                  <div class="ig-card" data-slot="5">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_5.png" alt="Image generation sample 5" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_15.png" alt="Image generation sample 15" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- slot 6 -->
+                  <div class="ig-card" data-slot="6">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_6.png" alt="Image generation sample 6" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_16.png" alt="Image generation sample 16" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- slot 7 -->
+                  <div class="ig-card" data-slot="7">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_7.png" alt="Image generation sample 7" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_17.png" alt="Image generation sample 17" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- slot 8 -->
+                  <div class="ig-card" data-slot="8">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_8.png" alt="Image generation sample 8" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_18.png" alt="Image generation sample 18" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- slot 9 -->
+                  <div class="ig-card" data-slot="9">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_9.png" alt="Image generation sample 9" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_19.png" alt="Image generation sample 19" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- slot 10 -->
+                  <div class="ig-card" data-slot="10">
+                    <div class="ig-card__inner">
+                      <div class="ig-face ig-face--front">
+                        <img class="ig-img" src="assets/examples/img_10.png" alt="Image generation sample 10" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="ig-face ig-face--back">
+                        <img class="ig-img" src="assets/examples/img_20.png" alt="Image generation sample 20" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </section>
+
+            <style>
+              /* ===== Image Generation Flip Grid ===== */
+              #ex-image-generation .ig-grid{
+                display:grid;
+                grid-template-columns:repeat(5, minmax(0, 1fr));
+                gap:14px;
+                align-items:stretch;
+              }
+              @media (max-width: 920px){
+                #ex-image-generation .ig-grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); }
+              }
+              @media (max-width: 560px){
+                #ex-image-generation .ig-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+              }
+
+              #ex-image-generation .ig-card{
+                perspective: 1200px;
+                border-radius: 14px;
+                overflow: hidden;
+                /* optional subtle border to match your blue theme */
+                border: 1px solid rgba(15, 15, 112, 0.14);
+                background: rgba(15, 15, 112, 0.03);
+              }
+
+              #ex-image-generation .ig-card__inner{
+                position: relative;
+                width: 100%;
+                aspect-ratio: 1 / 1;       /* square holders; change if you want 4:3 etc */
+                transform-style: preserve-3d;
+                transition: transform 720ms cubic-bezier(.2,.8,.2,1);
+                will-change: transform;
+              }
+
+              #ex-image-generation .ig-card.is-flipped .ig-card__inner{
+                transform: rotateY(180deg);
+              }
+
+              #ex-image-generation .ig-face{
+                position:absolute;
+                inset:0;
+                backface-visibility:hidden;
+                transform: translateZ(0);
+              }
+
+              #ex-image-generation .ig-face--back{
+                transform: rotateY(180deg);
+              }
+
+              #ex-image-generation .ig-img{
+                width:100%;
+                height:100%;
+                object-fit: cover;
+                display:block;
+              }
+            </style>
+
+            <script>
+              // ===== Image Generation Auto Flip (1->11->21->1), randomized per-slot timing =====
+              (() => {
+                const grid = document.getElementById("igGrid");
+                if (!grid) return;
+
+                // Safety: only run once even if hot-reloaded / re-initialized
+                if (grid.dataset.igInit === "1") return;
+                grid.dataset.igInit = "1";
+
+                const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+                const randInt = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+
+                const basePath = "assets/examples/img_";
+                const ext = ".png";
+
+                // Each slot i has cycle [i, i+10, i+20]
+                const cycleFor = (i) => [i, i + 10, i + 20];
+
+                // Preload an image to reduce visible pop
+                const preload = (src) => { const im = new Image(); im.src = src; };
+
+                const cards = Array.from(grid.querySelectorAll(".ig-card"));
+                const stateBySlot = new Map();
+
+                // Init state + preload next images
+                for (const card of cards) {
+                  const slot = Number(card.dataset.slot);
+                  const cyc = cycleFor(slot);
+                  stateBySlot.set(slot, { idx: 0, cyc });
+
+                  // preload all 3 for this slot
+                  for (const k of cyc) preload(`${basePath}${k}${ext}`);
+                }
+
+                // Animation timing
+                const flipDurationMs = 720;         // must match CSS transition ~720ms
+                const swapAtMs = Math.floor(flipDurationMs * 0.52); // swap image near mid-flip
+
+                // random schedule per card: each flip occurs between [min,max] ms
+                const MIN_WAIT = 1400;
+                const MAX_WAIT = 4200;
+
+                const setFaceImg = (card, face, n) => {
+                  const img = card.querySelector(face === "front" ? ".ig-face--front img" : ".ig-face--back img");
+                  if (!img) return;
+                  img.src = `${basePath}${n}${ext}`;
+                  img.alt = `Image generation sample ${n}`;
+                };
+
+                const scheduleNext = (card) => {
+                  const slot = Number(card.dataset.slot);
+                  const st = stateBySlot.get(slot);
+                  if (!st) return;
+
+                  const wait = randInt(MIN_WAIT, MAX_WAIT);
+
+                  st.timer = window.setTimeout(() => {
+                    // advance cycle index
+                    const nextIdx = (st.idx + 1) % st.cyc.length;
+                    const nextImgNum = st.cyc[nextIdx];
+
+                    // If currently not flipped, we will flip to back and set back image to next.
+                    // If currently flipped, we will flip to front and set front image to next.
+                    const goingToBack = !card.classList.contains("is-flipped");
+
+                    // set target face image shortly before mid-flip
+                    window.setTimeout(() => {
+                      setFaceImg(card, goingToBack ? "back" : "front", nextImgNum);
+                    }, swapAtMs);
+
+                    // perform the flip
+                    card.classList.toggle("is-flipped");
+
+                    // commit state AFTER the flip ends
+                    window.setTimeout(() => {
+                      st.idx = nextIdx;
+
+                      // (optional) keep the non-visible face ready with the *next-next* image
+                      const nnIdx = (st.idx + 1) % st.cyc.length;
+                      const nnNum = st.cyc[nnIdx];
+                      setFaceImg(card, goingToBack ? "front" : "back", nnNum);
+
+                      scheduleNext(card);
+                    }, flipDurationMs + 20);
+                  }, wait);
+                };
+
+                // Start each card at a random phase/time (staggered)
+                for (const card of cards) {
+                  // randomize initial state (0/1/2) so grid isn't synchronized
+                  const slot = Number(card.dataset.slot);
+                  const st = stateBySlot.get(slot);
+                  const startIdx = randInt(0, 2);
+                  st.idx = startIdx;
+
+                  // show current on front; set back to next for smooth first flip
+                  const curr = st.cyc[st.idx];
+                  const next = st.cyc[(st.idx + 1) % st.cyc.length];
+                  setFaceImg(card, "front", curr);
+                  setFaceImg(card, "back", next);
+
+                  // random initial delay
+                  const kick = randInt(500, 2200);
+                  window.setTimeout(() => scheduleNext(card), kick);
+                }
+
+                // Respect reduced motion
+                const mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+                if (mq && mq.matches) {
+                  // stop timers and disable flipping
+                  for (const [slot, st] of stateBySlot.entries()) {
+                    if (st.timer) window.clearTimeout(st.timer);
+                  }
+                  cards.forEach(c => c.classList.remove("is-flipped"));
+                }
+              })();
+            </script>
 
             <!-- 5) Image Editing -->
             <section id="ex-image-editing" class="collection-container" data-collection>
