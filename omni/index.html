@@ -550,25 +550,8 @@
               <strong>Dynin-Omni</strong> models omnimodal generation as
               <strong>masked token denoising</strong> over discrete sequences.
               Instead of autoregression, it iteratively refines masked tokens
-              in parallel—enabling scalable and controllable generation across
-              text, image, video, and speech.
-            </p>
-
-            <!-- Figure: Architecture Comparison -->
-            <figure class="figure">
-              <img
-                class="figure__img"
-                src="./assets/arch_compare.gif"
-                alt="Architecture comparison"
-                loading="lazy"
-              />
-            </figure>
-
-            <h3 class="method__title">Unified Token Space & Architecture</h3>
-            <p>
-              All modalities are mapped into a <strong>shared discrete token space</strong>
-              and processed by a single Transformer backbone,
-              enabling unified understanding and native cross-modal generation.
+              in parallel with <strong>modality-aware decoding schedules</strong>,
+              enabling scalable and controllable generation across text, image, video, and speech.
             </p>
 
             <!-- Figure: Main architecture -->
@@ -580,6 +563,23 @@
                 loading="lazy"
               />
             </figure>
+
+            <h3 class="method__title">Unified Token Space & Architecture</h3>
+            <p>
+              All modalities are mapped into a <strong>shared discrete token space</strong>
+              and processed by a single Transformer backbone,
+              enabling unified understanding and native cross-modal generation.
+            </p>
+
+            <!-- Figure: Architecture Comparison -->
+            <figure class="figure">
+              <img
+                class="figure__img"
+                src="./assets/arch_compare.gif"
+                alt="Architecture comparison"
+                loading="lazy"
+              />
+            </figure>            
 
           </div>
         </div>
