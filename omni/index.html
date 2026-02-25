@@ -585,6 +585,127 @@
         </div>
       </section>
 
+      <!-- Examples -->
+      <section id="examples" class="section">
+        <div class="container">
+          <h2 class="section__title">Examples</h2>
+          <p class="section__lead">
+            We evaluate VIRST with comprehensive experimental settings, benchmark comparisons, and ablation studies.
+          </p>
+
+          <div class="prose">
+            <h3 class="method__title">Experimental Settings</h3>
+            <p>
+              In our experiments, the vision-language backbone is initialized with VideoChat-Flash-7B,
+              whose vision encoder is a ViT-based model pretrained with UMT, while the mask prediction
+              branch adopts SAM2. Low-rank adaptation (LoRA) is applied for efficient fine-tuning, and
+              the STF module is trained from scratch.
+            </p>
+          </div>
+
+          <!-- Modality Nav (sticky inside #examples) -->
+          <div class="examples-nav" role="navigation" aria-label="Examples modality navigation">
+            <div class="examples-nav__inner">
+              <button class="examples-nav__btn is-active" type="button" data-target="ex-text-reasoning">
+                Text Reasoning
+              </button>
+              <button class="examples-nav__btn" type="button" data-target="ex-image-understanding">
+                Image Understanding
+              </button>
+              <button class="examples-nav__btn" type="button" data-target="ex-video-understanding">
+                Video Understanding
+              </button>
+              <button class="examples-nav__btn" type="button" data-target="ex-image-generation">
+                Image Generation
+              </button>
+              <button class="examples-nav__btn" type="button" data-target="ex-image-editing">
+                Image Editing
+              </button>
+              <button class="examples-nav__btn" type="button" data-target="ex-asr-tts">
+                ASR &amp; TTS
+              </button>
+            </div>
+          </div>
+
+          <!-- Panels -->
+          <div class="examples-panels">
+
+            <section id="ex-text-reasoning" class="examples-panel is-active" data-panel>
+              <div class="examples-panel__head">
+                <h3 class="examples-panel__title">Text Reasoning</h3>
+                <p class="examples-panel__desc">Placeholder — add your text reasoning examples here.</p>
+              </div>
+              <div class="examples-panel__body">
+                <div class="examples-placeholder">
+                  <div class="examples-placeholder__box">Example cards / chat UI goes here</div>
+                </div>
+              </div>
+            </section>
+
+            <section id="ex-image-understanding" class="examples-panel" data-panel>
+              <div class="examples-panel__head">
+                <h3 class="examples-panel__title">Image Understanding</h3>
+                <p class="examples-panel__desc">Placeholder — add your image understanding examples here.</p>
+              </div>
+              <div class="examples-panel__body">
+                <div class="examples-placeholder">
+                  <div class="examples-placeholder__box">Image QA / grounding / segmentation examples</div>
+                </div>
+              </div>
+            </section>
+
+            <section id="ex-video-understanding" class="examples-panel" data-panel>
+              <div class="examples-panel__head">
+                <h3 class="examples-panel__title">Video Understanding</h3>
+                <p class="examples-panel__desc">Placeholder — add your video understanding examples here.</p>
+              </div>
+              <div class="examples-panel__body">
+                <div class="examples-placeholder">
+                  <div class="examples-placeholder__box">Video QA / temporal reasoning examples</div>
+                </div>
+              </div>
+            </section>
+
+            <section id="ex-image-generation" class="examples-panel" data-panel>
+              <div class="examples-panel__head">
+                <h3 class="examples-panel__title">Image Generation</h3>
+                <p class="examples-panel__desc">Placeholder — add your text-to-image examples here.</p>
+              </div>
+              <div class="examples-panel__body">
+                <div class="examples-placeholder">
+                  <div class="examples-placeholder__box">Prompt → generated image grid</div>
+                </div>
+              </div>
+            </section>
+
+            <section id="ex-image-editing" class="examples-panel" data-panel>
+              <div class="examples-panel__head">
+                <h3 class="examples-panel__title">Image Editing</h3>
+                <p class="examples-panel__desc">Placeholder — add your image editing examples here.</p>
+              </div>
+              <div class="examples-panel__body">
+                <div class="examples-placeholder">
+                  <div class="examples-placeholder__box">Input image + instruction → edited image</div>
+                </div>
+              </div>
+            </section>
+
+            <section id="ex-asr-tts" class="examples-panel" data-panel>
+              <div class="examples-panel__head">
+                <h3 class="examples-panel__title">ASR &amp; TTS</h3>
+                <p class="examples-panel__desc">Placeholder — add your speech recognition / synthesis examples here.</p>
+              </div>
+              <div class="examples-panel__body">
+                <div class="examples-placeholder">
+                  <div class="examples-placeholder__box">ASR transcripts + TTS audio samples</div>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </section>
+
       <!-- RESULTS -->
       <section id="results" class="section">
         <div class="container">
