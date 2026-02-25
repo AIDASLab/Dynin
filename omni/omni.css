@@ -801,25 +801,20 @@
   }
 
   /* Title band (similar to your reference) */
-  #examples .collection-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 16px 10px;
-    border-radius: 14px;
-
-    border: 1px solid rgba(15, 15, 112, 0.10);
-    background: rgba(15, 15, 112, 0.02);
-
-    margin-bottom: 12px;
+  #examples .collection-title{
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
 
-  #examples .collection-title h3 {
-    margin: 0;
-    font-size: 20px;
-    letter-spacing: -0.01em;
-    color: rgba(17, 24, 39, 0.90);
+  #examples .collection-title h3{
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
 
   /* Intro text per modality */

@@ -975,10 +975,7 @@
             <section id="ex-image-editing" class="collection-container" data-collection>
               <div class="collection-title">
                 <h3>Image Editing</h3>
-              </div>
-              <p class="collection-desc">
-                Long-form edit demos (auto-fading). Randomly rotates through 5 examples every ~5s.
-              </p>
+              </div>              
 
               <div class="collection-surface">
                 <div class="ie-stage" id="ieStage" aria-label="Image editing sample (auto-fade)">
@@ -1007,14 +1004,14 @@
               #ex-image-editing .ie-stage{
                 position: relative;
                 width: 100%;
-                max-width: 980px; /* feels good for a single long image */
+                max-width: 980px;
                 margin: 0 auto;
 
-                border-radius: 14px;
-                overflow: hidden;
-
-                border: 1px solid rgba(15, 15, 112, 0.14);
-                background: rgba(15, 15, 112, 0.03);
+                /* remove the box look */
+                border: 0;
+                background: transparent;
+                border-radius: 0;
+                overflow: visible;
               }
 
               /* keep a stable height while images load (tweak aspect ratio if you know it) */
