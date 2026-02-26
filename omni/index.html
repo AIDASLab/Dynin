@@ -1631,10 +1631,180 @@
       <!-- CONTRIBUTION -->
       <section id="contribution" class="section">
         <div class="container">
-          <h2 class="section__title">Contribution</h2>    
-                   
+          <h2 class="section__title">Contributors</h2>
+
+          <div class="contributors-grid">
+
+            <!-- Contributor 1 -->
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_1.jpeg" alt="Contributor 1">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 1</div>
+                <div class="contributor-role">Lead Researcher</div>
+              </div>
+            </div>
+
+            <!-- Contributor 2 -->
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_2.jpeg" alt="Contributor 2">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 2</div>
+                <div class="contributor-role">Model Architect</div>
+              </div>
+            </div>
+
+            <!-- Contributor 3 -->
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_3.jpeg" alt="Contributor 3">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 3</div>
+                <div class="contributor-role">Multimodal Engineer</div>
+              </div>
+            </div>
+
+            <!-- Contributor 4 -->
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_4.jpeg" alt="Contributor 4">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 4</div>
+                <div class="contributor-role">Data Scientist</div>
+              </div>
+            </div>
+
+            <!-- Contributor 5 -->
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_5.jpeg" alt="Contributor 5">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 5</div>
+                <div class="contributor-role">Evaluation Lead</div>
+              </div>
+            </div>
+
+            <!-- Contributor 6 -->
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_6.jpeg" alt="Contributor 6">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 6</div>
+                <div class="contributor-role">Training Engineer</div>
+              </div>
+            </div>
+
+            <!-- Row 2 (5 items) -->
+
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_7.jpeg" alt="Contributor 7">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 7</div>
+                <div class="contributor-role">Speech Specialist</div>
+              </div>
+            </div>
+
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_8.jpeg" alt="Contributor 8">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 8</div>
+                <div class="contributor-role">Vision Researcher</div>
+              </div>
+            </div>
+
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_9.jpeg" alt="Contributor 9">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 9</div>
+                <div class="contributor-role">Video Modeling</div>
+              </div>
+            </div>
+
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_10.jpeg" alt="Contributor 10">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 10</div>
+                <div class="contributor-role">Infrastructure</div>
+              </div>
+            </div>
+
+            <div class="contributor-card">
+              <img src="assets/examples/contributor_11.jpeg" alt="Contributor 11">
+              <div class="contributor-info">
+                <div class="contributor-name">Contributor 11</div>
+                <div class="contributor-role">Research Intern</div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
+
+      <style>
+      /* Grid layout */
+      .contributors-grid {
+        margin-top: 40px;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 36px 28px;
+        justify-items: center;
+      }
+
+      /* Automatically makes second row 5 centered */
+      .contributors-grid .contributor-card:nth-child(n+7) {
+        grid-column: span 1;
+      }
+
+      /* Card */
+      .contributor-card {
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.25s ease;
+      }
+
+      /* Image */
+      .contributor-card img {
+        width: 110px;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 50%;
+        display: block;
+        margin: 0 auto 14px;
+      }
+
+      /* Text */
+      .contributor-name {
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      .contributor-role {
+        font-size: 13px;
+        color: rgba(0,0,0,0.6);
+        margin-top: 4px;
+      }
+
+      /* Hover effect */
+      .contributor-card:hover {
+        transform: translateY(-6px);
+      }
+
+      /* Responsive */
+      @media (max-width: 1100px) {
+        .contributors-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .contributors-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      </style>
+
+      <script>
+      document.querySelectorAll('.contributor-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.transition = "transform 0.25s ease";
+        });
+      });
+      </script>
 
     </main>
 
