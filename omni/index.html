@@ -639,8 +639,26 @@
                 <h3>Text Reasoning</h3>
               </div>
               <p class="collection-desc">Placeholder — add your text reasoning examples here.</p>
+
               <div class="collection-surface">
-                <div class="examples-placeholder__box">Example cards / chat UI goes here</div>
+                <div class="sweep-stage" id="trStage" aria-label="Text reasoning samples (auto-sweep)">
+                  <!-- current -->
+                  <img
+                    class="sweep-img sweep-img--a"
+                    src="assets/examples/txt_1.png"
+                    alt="Text reasoning sample 1"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <!-- next -->
+                  <img
+                    class="sweep-img sweep-img--b"
+                    src="assets/examples/txt_2.png"
+                    alt="Text reasoning sample 2"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
               </div>
             </section>
 
@@ -1036,9 +1054,10 @@
             </section>
 
             <style>
-              /* ===== Shared Sweep Slider (Image Understanding + Video + Image Editing) ===== */
+              /* ===== Shared Sweep Slider (Text + Image Understanding + Video + Image Editing) ===== */
             
               /* stage: no box look */
+              #ex-text-reasoning .sweep-stage,
               #ex-image-understanding .sweep-stage,
               #ex-video-understanding .sweep-stage,
               #ex-image-editing .sweep-stage{
@@ -1054,6 +1073,7 @@
               }
             
               /* stable height while assets load (adjust if needed) */
+              #ex-text-reasoning .sweep-stage::before,
               #ex-image-understanding .sweep-stage::before,
               #ex-video-understanding .sweep-stage::before,
               #ex-image-editing .sweep-stage::before{
@@ -1063,6 +1083,7 @@
               }
             
               /* images */
+              #ex-text-reasoning .sweep-img,
               #ex-image-understanding .sweep-img,
               #ex-video-understanding .sweep-img,
               #ex-image-editing .sweep-img{
@@ -1078,12 +1099,14 @@
               }
             
               /* default positions (A visible, B parked to the right) */
+              #ex-text-reasoning .sweep-img--a,
               #ex-image-understanding .sweep-img--a,
               #ex-video-understanding .sweep-img--a,
               #ex-image-editing .sweep-img--a{
                 transform: translate3d(0%, 0, 0);
                 z-index: 2;
               }
+              #ex-text-reasoning .sweep-img--b,
               #ex-image-understanding .sweep-img--b,
               #ex-video-understanding .sweep-img--b,
               #ex-image-editing .sweep-img--b{
@@ -1094,11 +1117,13 @@
               /* sweep state:
                 - A exits left
                 - B enters to center */
+              #ex-text-reasoning .sweep-stage.is-sweep .sweep-img--a,
               #ex-image-understanding .sweep-stage.is-sweep .sweep-img--a,
               #ex-video-understanding .sweep-stage.is-sweep .sweep-img--a,
               #ex-image-editing .sweep-stage.is-sweep .sweep-img--a{
                 transform: translate3d(-100%, 0, 0);
               }
+              #ex-text-reasoning .sweep-stage.is-sweep .sweep-img--b,
               #ex-image-understanding .sweep-stage.is-sweep .sweep-img--b,
               #ex-video-understanding .sweep-stage.is-sweep .sweep-img--b,
               #ex-image-editing .sweep-stage.is-sweep .sweep-img--b{
@@ -1106,6 +1131,7 @@
               }
             
               /* transition timing */
+              #ex-text-reasoning .sweep-img,
               #ex-image-understanding .sweep-img,
               #ex-video-understanding .sweep-img,
               #ex-image-editing .sweep-img{
@@ -1114,15 +1140,17 @@
             
               /* Reduced motion */
               @media (prefers-reduced-motion: reduce){
+                #ex-text-reasoning .sweep-img,
                 #ex-image-understanding .sweep-img,
                 #ex-video-understanding .sweep-img,
                 #ex-image-editing .sweep-img{
                   transition: none !important;
                 }
+                #ex-text-reasoning .sweep-stage,
                 #ex-image-understanding .sweep-stage,
                 #ex-video-understanding .sweep-stage,
                 #ex-image-editing .sweep-stage{
-                  overflow: visible; /* avoid weird clipping when transitions are off */
+                  overflow: visible;
                 }
               }
             </style>
@@ -1134,9 +1162,9 @@
                 basePath,
                 ext,
                 count,
-                holdMs = 10000,        // ~10s per image fully shown
-                transitionMs = 1200,   // must match CSS
-                random = true          // set false to go 1->2->3->...
+                holdRangeMs = [10000, 15000], // random per-step delay (10~15s)
+                transitionMs = 1200,          // must match CSS
+                random = true                 // set false to go 1->2->3->...
               }) {
                 const stage = document.getElementById(stageId);
                 if (!stage) return;
@@ -1149,7 +1177,6 @@
             
                 const srcOf = (i) => `${basePath}${i}${ext}`;
                 const preload = (src) => { const im = new Image(); im.src = src; };
-            
                 for (let i = 1; i <= count; i++) preload(srcOf(i));
             
                 const setImg = (el, idx, altPrefix) => {
@@ -1163,12 +1190,19 @@
                   return nxt;
                 };
             
+                const pickHold = () => {
+                  const lo = Math.max(0, holdRangeMs[0] ?? 10000);
+                  const hi = Math.max(lo, holdRangeMs[1] ?? 15000);
+                  return lo + Math.floor(Math.random() * (hi - lo + 1));
+                };
+            
                 let curr = 1;
                 let next = random ? pickNextRandom(curr) : (curr % count) + 1;
                 let timer = null;
             
                 // alt text prefix by stage
                 const altPrefix =
+                  stageId === "trStage" ? "Text reasoning sample" :
                   stageId === "iuStage" ? "Image understanding sample" :
                   stageId === "vuStage" ? "Video understanding sample" :
                   "Image editing sample";
@@ -1186,21 +1220,17 @@
                     next = random ? pickNextRandom(curr) : (curr % count) + 1;
             
                     const sweeping = stage.classList.contains("is-sweep");
-                    const hiddenEl = sweeping ? imgA : imgB; // hidden offscreen (left or right depending on state)
+                    const hiddenEl = sweeping ? imgA : imgB;
             
-                    // set new image on the hidden layer
                     setImg(hiddenEl, next, altPrefix);
             
-                    // IMPORTANT: park hidden layer to the right for the next "enter from right"
+                    // park hidden layer to the right for the next "enter from right"
                     hiddenEl.style.transform = "translate3d(100%,0,0)";
-            
-                    // allow browser to apply inline transform, then remove it so CSS controls again
-                    requestAnimationFrame(() => {
-                      hiddenEl.style.transform = "";
-                    });
+                    requestAnimationFrame(() => { hiddenEl.style.transform = ""; });
                   }, transitionMs + 30);
             
-                  timer = window.setTimeout(step, holdMs);
+                  // schedule next cycle with random 10~15s
+                  timer = window.setTimeout(step, pickHold());
                 };
             
                 // Reduced motion => no autoplay
@@ -1212,9 +1242,20 @@
                   return;
                 }
             
-                // start
-                timer = window.setTimeout(step, 800 + Math.floor(Math.random() * 900));
+                // start with a random initial delay so sections don't sync
+                timer = window.setTimeout(step, 800 + Math.floor(Math.random() * 2400));
               }
+            
+              // Text Reasoning: txt_1..txt_4.png
+              initSweepStage({
+                stageId: "trStage",
+                basePath: "assets/examples/txt_",
+                ext: ".png",
+                count: 4,
+                holdRangeMs: [10000, 15000],
+                transitionMs: 1200,
+                random: true
+              });
             
               // Image Understanding: mmu_1..mmu_5.png
               initSweepStage({
@@ -1222,7 +1263,7 @@
                 basePath: "assets/examples/mmu_",
                 ext: ".png",
                 count: 5,
-                holdMs: 10000,
+                holdRangeMs: [10000, 15000],
                 transitionMs: 1200,
                 random: true
               });
@@ -1233,7 +1274,7 @@
                 basePath: "assets/examples/vid_",
                 ext: ".gif",
                 count: 5,
-                holdMs: 10000,
+                holdRangeMs: [10000, 15000],
                 transitionMs: 1200,
                 random: true
               });
@@ -1244,7 +1285,7 @@
                 basePath: "assets/examples/img_edit_",
                 ext: ".png",
                 count: 5,
-                holdMs: 10000,
+                holdRangeMs: [10000, 15000],
                 transitionMs: 1200,
                 random: true
               });
