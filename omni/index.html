@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dynin-Omni — Omni-Modal Model</title>
+    <title>Dynin-Omni : Omnimodal Unified Large Diffusion Language Model</title>
 
     <meta name="description" content="Dynin-Omni — omni-modal foundation model (placeholder launch page)." />
     <meta name="theme-color" content="#0f0f70" />
@@ -59,7 +59,7 @@
           <h1 class="hero__title">Dynin-Omni</h1>
 
           <p class="hero__subtitle">
-            We introduce <strong>Dynin-Omni</strong>, a first masked diffusion-based omnimodal foundation model that unifies text, image, video, and speech understanding and generation, achieving strong cross-modal performance within a single architecture.
+            We introduce <strong>Dynin-Omni</strong>, a first <strong>masked diffusion-based omnimodal foundation model</strong> that unifies text, image, video, and speech understanding and generation, achieving strong cross-modal performance within a single architecture.
           </p>
 
           <div class="hero__actions">
@@ -563,7 +563,7 @@
             <figure class="figure">
               <img
                 class="figure__img"
-                src="./assets/arch_compare.gif"
+                src="./assets/arc_compare2_hold2s.gif"
                 alt="Architecture comparison"
                 loading="lazy"
               />
@@ -1019,21 +1019,23 @@
               <div class="collection-surface">
                 <div class="sweep-stage" id="ieStage" aria-label="Image editing samples (auto-sweep)">
                   <!-- current -->
-                  <img
+                  <video
                     class="sweep-img sweep-img--a"
-                    src="assets/examples/img_edit_1.png"
-                    alt="Image editing sample 1"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                    src="assets/examples/imgedit_mp41.mp4"
+                    aria-label="Image editing sample 1"
+                    muted
+                    playsinline
+                    preload="auto"
+                  ></video>
                   <!-- next -->
-                  <img
+                  <video
                     class="sweep-img sweep-img--b"
-                    src="assets/examples/img_edit_2.png"
-                    alt="Image editing sample 2"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                    src="assets/examples/imgedit_mp42.mp4"
+                    aria-label="Image editing sample 2"
+                    muted
+                    playsinline
+                    preload="auto"
+                  ></video>
                 </div>
               </div>
             </section>
@@ -1190,11 +1192,36 @@
                 if (!imgA || !imgB) return;
             
                 const srcOf = (i) => `${basePath}${i}${ext}`;
-                const preload = (src) => { const im = new Image(); im.src = src; };
+                const preload = (src) => {
+                  if (/\.(mp4|webm)$/i.test(src)) {
+                    const v = document.createElement("video");
+                    v.preload = "auto";
+                    v.muted = true;
+                    v.playsInline = true;
+                    v.src = src;
+                    return;
+                  }
+                  const im = new Image();
+                  im.src = src;
+                };
                 for (let i = 1; i <= count; i++) preload(srcOf(i));
             
-                const setImg = (el, idx, altPrefix) => {
-                  el.src = srcOf(idx);
+                const setImg = (el, idx, altPrefix, { play = true } = {}) => {
+                  const src = srcOf(idx);
+                  if (el.tagName === "VIDEO") {
+                    el.pause();
+                    el.src = src;
+                    el.setAttribute("aria-label", `${altPrefix} ${idx}`);
+                    el.currentTime = 0;
+                    if (play) {
+                      const playPromise = el.play();
+                      if (playPromise && typeof playPromise.catch === "function") {
+                        playPromise.catch(() => {});
+                      }
+                    }
+                    return;
+                  }
+                  el.src = src;
                   el.alt = `${altPrefix} ${idx}`;
                 };
             
@@ -1222,25 +1249,39 @@
                   "Image editing sample";
             
                 // init
-                setImg(imgA, curr, altPrefix);
-                setImg(imgB, next, altPrefix);
+                setImg(imgA, curr, altPrefix, { play: true });
+                setImg(imgB, next, altPrefix, { play: false });
             
                 const step = () => {
                   stage.classList.toggle("is-sweep");
+                  const sweeping = stage.classList.contains("is-sweep");
+                  const visibleEl = sweeping ? imgB : imgA;
+                  const hiddenEl = sweeping ? imgA : imgB;
+
+                  if (visibleEl.tagName === "VIDEO") {
+                    visibleEl.currentTime = 0;
+                    const playPromise = visibleEl.play();
+                    if (playPromise && typeof playPromise.catch === "function") {
+                      playPromise.catch(() => {});
+                    }
+                  }
+                  if (hiddenEl.tagName === "VIDEO") {
+                    hiddenEl.pause();
+                    hiddenEl.currentTime = 0;
+                  }
             
                   // after transition completes, update the now-hidden layer and park it right
                   window.setTimeout(() => {
                     curr = next;
                     next = random ? pickNextRandom(curr) : (curr % count) + 1;
             
-                    const sweeping = stage.classList.contains("is-sweep");
-                    const hiddenEl = sweeping ? imgA : imgB;
+                    const nowHiddenEl = stage.classList.contains("is-sweep") ? imgA : imgB;
             
-                    setImg(hiddenEl, next, altPrefix);
+                    setImg(nowHiddenEl, next, altPrefix, { play: false });
             
                     // park hidden layer to the right for the next "enter from right"
-                    hiddenEl.style.transform = "translate3d(100%,0,0)";
-                    requestAnimationFrame(() => { hiddenEl.style.transform = ""; });
+                    nowHiddenEl.style.transform = "translate3d(100%,0,0)";
+                    requestAnimationFrame(() => { nowHiddenEl.style.transform = ""; });
                   }, transitionMs + 30);
             
                   // schedule next cycle with random 10~15s
@@ -1251,8 +1292,8 @@
                 const mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
                 if (mq && mq.matches) {
                   stage.classList.remove("is-sweep");
-                  setImg(imgA, 1, altPrefix);
-                  setImg(imgB, 1, altPrefix);
+                  setImg(imgA, 1, altPrefix, { play: false });
+                  setImg(imgB, 1, altPrefix, { play: false });
                   return;
                 }
             
@@ -1293,13 +1334,13 @@
                 random: true
               });
             
-              // Image Editing: img_edit_1..img_edit_5.png
+              // Image Editing: imgedit_mp41..imgedit_mp45.mp4
               initSweepStage({
                 stageId: "ieStage",
-                basePath: "assets/examples/img_edit_",
-                ext: ".png",
+                basePath: "assets/examples/imgedit_mp4",
+                ext: ".mp4",
                 count: 5,
-                holdRangeMs: [10000, 15000],
+                holdRangeMs: [10000, 10000],
                 transitionMs: 1200,
                 random: true
               });

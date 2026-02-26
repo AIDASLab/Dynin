@@ -2,6 +2,112 @@
 // + image modal (click [data-modal-src] -> open centered preview)
 // + Examples modality tabs (6) with hash support
 (() => {
+  if ("scrollRestoration" in window.history) {
+    window.history.scrollRestoration = "manual";
+  }
+
+  const runContentMdmReveal = () => {
+    const TIME_SCALE = 1.5;
+    const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduced && reduced.matches) return;
+
+    const main = document.querySelector("main");
+    if (!main) return;
+
+    const textTargets = Array.from(
+      main.querySelectorAll(
+        [
+          ".hero__title",
+          ".hero__subtitle",
+          ".section__title",
+          ".prose p",
+          ".collection-title h3",
+          "#ex-asr-tts .asrtts__label"
+        ].join(",")
+      )
+    );
+
+    const mediaTargets = Array.from(
+      main.querySelectorAll(
+        [
+          ".figure__img",
+          ".collection-surface img",
+          ".collection-surface video",
+          "#ex-image-generation .ig-card",
+          "#ex-asr-tts .asrtts__panel"
+        ].join(",")
+      )
+    );
+
+    const toWords = (root) => {
+      if (!root || root.dataset.mdmWords === "1") {
+        return Array.from(root?.querySelectorAll?.(".mdm-word") || []);
+      }
+      root.dataset.mdmWords = "1";
+
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          const parentTag = node.parentElement?.tagName;
+          if (parentTag === "SCRIPT" || parentTag === "STYLE") return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+
+      const textNodes = [];
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+      textNodes.forEach((node) => {
+        const tokens = node.nodeValue.match(/\s+|[^\s]+/g) || [];
+        const frag = document.createDocumentFragment();
+        tokens.forEach((token) => {
+          if (/^\s+$/.test(token)) {
+            frag.appendChild(document.createTextNode(token));
+            return;
+          }
+          const span = document.createElement("span");
+          span.className = "mdm-word";
+          span.textContent = token;
+          frag.appendChild(span);
+        });
+        node.parentNode?.replaceChild(frag, node);
+      });
+
+      return Array.from(root.querySelectorAll(".mdm-word"));
+    };
+
+    const words = [];
+    textTargets.forEach((el, groupIdx) => {
+      const groupWords = toWords(el);
+      groupWords.forEach((w, i) => {
+        const delay = (60 + Math.min(700, groupIdx * 18) + i * 9 + Math.floor(Math.random() * 180)) * TIME_SCALE;
+        const dur = (320 + Math.floor(Math.random() * 220)) * TIME_SCALE;
+        w.style.setProperty("--mdm-delay", `${Math.round(delay)}ms`);
+        w.style.setProperty("--mdm-dur", `${Math.round(dur)}ms`);
+        words.push(w);
+      });
+    });
+
+    mediaTargets.forEach((el, idx) => {
+      const delay = (120 + idx * 45 + Math.floor(Math.random() * 260)) * TIME_SCALE;
+      const dur = (420 + Math.floor(Math.random() * 260)) * TIME_SCALE;
+      el.classList.add("mdm-media");
+      el.style.setProperty("--mdm-delay", `${Math.round(delay)}ms`);
+      el.style.setProperty("--mdm-dur", `${Math.round(dur)}ms`);
+    });
+
+    requestAnimationFrame(() => {
+      words.forEach((w) => w.classList.add("is-in"));
+      mediaTargets.forEach((el) => el.classList.add("is-in"));
+    });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runContentMdmReveal, { once: true });
+  } else {
+    runContentMdmReveal();
+  }
+
   // ============================
   // 1) Mobile menu
   // ============================
@@ -89,62 +195,144 @@
   });
 
   // ============================
-  // 3) Examples modality tabs
+  // 3) Examples navigation: dock + scrollspy + anchor scroll
   // ============================
   const examplesRoot = document.getElementById("examples");
   if (!examplesRoot) return;
 
-  const nav = examplesRoot.querySelector(".examples-nav");
-  const buttons = Array.from(examplesRoot.querySelectorAll(".examples-nav__btn"));
-  const panels = Array.from(examplesRoot.querySelectorAll("[data-panel]"));
+  const navWrapper = document.getElementById("examplesNavWrapper");
+  const navPlaceholder = examplesRoot.querySelector(".gallery-nav-placeholder");
+  const dockTrigger =
+    document.querySelector("#ex-text-reasoning .collection-title h3") ||
+    document.querySelector("#ex-text-reasoning .collection-title");
+  const dockEndSection = document.getElementById("results");
+  const buttons = Array.from(examplesRoot.querySelectorAll('.examples-nav .nav-button[data-nav]'));
+  const sections = buttons
+    .map((btn) => document.getElementById(btn.dataset.nav))
+    .filter(Boolean);
 
-  const hasPanel = (id) => panels.some((p) => p.id === id);
+  if (!navWrapper || !dockTrigger || sections.length === 0) return;
 
-  const setExamplesActive = (id, { updateHash = true, scrollNav = true } = {}) => {
-    if (!id || !hasPanel(id)) return;
+  const hasSection = (id) => sections.some((sec) => sec.id === id);
 
-    buttons.forEach((b) => b.classList.toggle("is-active", b.dataset.target === id));
-    panels.forEach((p) => p.classList.toggle("is-active", p.id === id));
+  const setActive = (id, { updateHash = false, scrollPill = false } = {}) => {
+    if (!id || !hasSection(id)) return;
 
-    // Keep active pill visible in horizontal scroll
-    const activeBtn = buttons.find((b) => b.dataset.target === id);
-    activeBtn?.scrollIntoView?.({ behavior: "smooth", inline: "center", block: "nearest" });
+    buttons.forEach((btn) => {
+      const active = btn.dataset.nav === id;
+      btn.classList.toggle("nav-button-active", active);
+      btn.setAttribute("aria-current", active ? "true" : "false");
+    });
 
-    // Update URL hash without jumping
+    if (scrollPill) {
+      const activeBtn = buttons.find((btn) => btn.dataset.nav === id);
+      activeBtn?.scrollIntoView?.({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+
     if (updateHash) {
       const url = new URL(window.location.href);
       url.hash = id;
       window.history.replaceState(null, "", url.toString());
     }
+  };
 
-    // Ensure user sees the nav + panel (nice UX)
-    if (scrollNav && nav) {
-      const rect = nav.getBoundingClientRect();
-      const inView = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
-      if (!inView) nav.scrollIntoView({ behavior: "smooth", block: "start" });
+  let lockedActiveId = null;
+  let lockUntilMs = 0;
+
+  const updateDockedState = () => {
+    const triggerPassedTop = dockTrigger.getBoundingClientRect().top <= 0;
+    const beforeDockEnd =
+      !dockEndSection || dockEndSection.getBoundingClientRect().top > (navWrapper.offsetHeight + 6);
+    const shouldDock = triggerPassedTop && beforeDockEnd;
+    const wasDocked = navWrapper.classList.contains("is-docked");
+
+    navWrapper.classList.toggle("is-docked", shouldDock);
+    navWrapper.classList.toggle("gallery-nav-sticky", shouldDock);
+    if (navPlaceholder) {
+      navPlaceholder.style.height = shouldDock ? `${navWrapper.offsetHeight}px` : "0px";
+    }
+
+    if (!wasDocked && shouldDock) {
+      navWrapper.classList.remove("is-dock-enter");
+      // force reflow so repeated docks retrigger animation
+      void navWrapper.offsetWidth;
+      navWrapper.classList.add("is-dock-enter");
+      window.setTimeout(() => navWrapper.classList.remove("is-dock-enter"), 260);
     }
   };
 
-  // Clicks on pills
+  const getScrollTargetTop = (sec) => {
+    const navH = navWrapper.offsetHeight || 0;
+    const gap = navWrapper.classList.contains("is-docked") ? 20 : 28;
+    return Math.max(0, Math.round(window.scrollY + sec.getBoundingClientRect().top - navH - gap));
+  };
+
+  const scrollToSection = (id) => {
+    const sec = document.getElementById(id);
+    if (!sec) return;
+    window.scrollTo({ top: getScrollTargetTop(sec), behavior: "smooth" });
+  };
+
+  const updateActiveFromScroll = () => {
+    if (lockedActiveId && Date.now() < lockUntilMs) {
+      setActive(lockedActiveId);
+      return;
+    }
+    lockedActiveId = null;
+    lockUntilMs = 0;
+
+    const navH = navWrapper.offsetHeight || 0;
+    const probeY = navWrapper.classList.contains("is-docked") ? navH + 18 : 18;
+    let currentId = sections[0].id;
+
+    for (const sec of sections) {
+      if (sec.getBoundingClientRect().top <= probeY) currentId = sec.id;
+    }
+    setActive(currentId);
+  };
+
   buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      setExamplesActive(btn.dataset.target, { updateHash: true, scrollNav: true });
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = btn.dataset.nav;
+      if (!hasSection(id)) return;
+      lockedActiveId = id;
+      lockUntilMs = Date.now() + 900;
+      setActive(id, { updateHash: true, scrollPill: true });
+      scrollToSection(id);
     });
   });
 
-  // Initialize from hash if it matches a panel
-  const initialId = window.location.hash ? window.location.hash.slice(1) : "";
-  if (hasPanel(initialId)) {
-    setExamplesActive(initialId, { updateHash: false, scrollNav: false });
-  } else {
-    // Default: first button/panel
-    const first = buttons[0]?.dataset?.target;
-    if (first) setExamplesActive(first, { updateHash: false, scrollNav: false });
-  }
+  let ticking = false;
+  const onScrollOrResize = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(() => {
+      updateDockedState();
+      updateActiveFromScroll();
+      ticking = false;
+    });
+  };
 
-  // Respond to back/forward hash changes
+  const navEntry = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+  const isBackForward = !!(navEntry && navEntry.type === "back_forward");
+  const initialId = window.location.hash ? window.location.hash.slice(1) : "";
+  updateDockedState();
+  setActive(hasSection(initialId) ? initialId : sections[0].id, { scrollPill: true });
+  if (!isBackForward) {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  } else if (hasSection(initialId)) {
+    scrollToSection(initialId);
+  }
+  updateActiveFromScroll();
+
+  window.addEventListener("scroll", onScrollOrResize, { passive: true });
+  window.addEventListener("resize", onScrollOrResize);
+  window.addEventListener("load", onScrollOrResize);
   window.addEventListener("hashchange", () => {
     const id = window.location.hash ? window.location.hash.slice(1) : "";
-    if (hasPanel(id)) setExamplesActive(id, { updateHash: false, scrollNav: false });
+    if (!hasSection(id)) return;
+    setActive(id, { scrollPill: true });
+    scrollToSection(id);
   });
 })();
