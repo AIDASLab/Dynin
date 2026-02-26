@@ -1305,198 +1305,334 @@
               });
             </script>
 
-            <!-- 6) ASR & TTS -->
+            <!-- 6) ASR & TTS (redesigned: PNG + custom audio bars + next) -->
             <section id="ex-asr-tts" class="collection-container" data-collection>
               <div class="collection-title">
                 <h3>ASR &amp; TTS</h3>
-              </div>              
+              </div>
 
               <div class="collection-surface">
-                <div class="asrtts-wrap" aria-label="ASR and TTS examples">
-                  <!-- LEFT: text -->
-                  <div class="asrtts-card asrtts-card--text">
-                    <div class="asrtts-card__head">
-                      <span class="asrtts-badge">Example <span id="asrttsIdx">1</span> / 5</span>
-                    </div>
-                    <p class="asrtts-text" id="asrttsText"></p>
-                  </div>
-
-                  <!-- RIGHT: audio + next button -->
-                  <div class="asrtts-card asrtts-card--audio">
-                    <div class="asrtts-audio-block">
-                      <div class="asrtts-label">Speech → Text (ASR)</div>
-                      <button class="asrtts-play" type="button" id="asrPlayBtn" aria-label="Play ASR audio">
-                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                          <path d="M8 5v14l11-7z" fill="currentColor"></path>
-                        </svg>
-                        <span id="asrPlayTxt">Play</span>
-                      </button>
-                      <audio id="asrAudio" preload="metadata" src="assets/examples/ASR_1.wav"></audio>
+                <div class="asrtts" aria-label="ASR and TTS examples">
+                  <!-- Header -->
+                  <div class="asrtts__head">
+                    <div class="asrtts__badge">
+                      Example <span id="asrttsIdx">1</span> / 5
                     </div>
 
-                    <div class="asrtts-divider"></div>
-
-                    <div class="asrtts-audio-block">
-                      <div class="asrtts-label">Text → Speech (TTS)</div>
-                      <button class="asrtts-play" type="button" id="ttsPlayBtn" aria-label="Play TTS audio">
-                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                          <path d="M8 5v14l11-7z" fill="currentColor"></path>
-                        </svg>
-                        <span id="ttsPlayTxt">Play</span>
-                      </button>
-                      <audio id="ttsAudio" preload="metadata" src="assets/examples/TTS_1.wav"></audio>
-                    </div>
-
-                    <!-- Next button on the right side -->
-                    <button class="asrtts-next" type="button" id="asrttsNextBtn" aria-label="Next example">
-                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                        <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <button class="asrtts__next" type="button" id="asrttsNextBtn" aria-label="Next example">
+                      <span class="asrtts__nextText">Next</span>
+                      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                        <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round"></path>
                       </svg>
                     </button>
+                  </div>
+
+                  <!-- Grid: ASR (left) / TTS (right) -->
+                  <div class="asrtts__grid">
+                    <!-- ASR -->
+                    <div class="asrtts__panel">
+                      <div class="asrtts__label">Speech → Text (ASR)</div>
+
+                      <!-- PNG (no outline/background; just place it) -->
+                      <img id="asrImg" class="asrtts__img" src="assets/examples/ASR_1.png" alt="ASR example 1" />
+
+                      <!-- Audio (hidden element) -->
+                      <audio id="asrAudio" preload="metadata" src="assets/examples/ASR_1.wav"></audio>
+
+                      <!-- Custom audio bar -->
+                      <div class="audioBar" data-player="asr" aria-label="ASR audio player">
+                        <button class="audioBar__btn audioBar__btn--play" type="button" data-action="toggle"
+                          aria-label="Play">
+                          <!-- play icon -->
+                          <svg class="audioBar__icon audioBar__icon--play" viewBox="0 0 24 24" width="18" height="18"
+                            aria-hidden="true">
+                            <path d="M8 5v14l11-7z" fill="currentColor"></path>
+                          </svg>
+                          <!-- pause icon -->
+                          <svg class="audioBar__icon audioBar__icon--pause" viewBox="0 0 24 24" width="18" height="18"
+                            aria-hidden="true">
+                            <path d="M7 6h4v12H7zM13 6h4v12h-4z" fill="currentColor"></path>
+                          </svg>
+                        </button>
+
+                        <button class="audioBar__btn audioBar__btn--stop" type="button" data-action="stop"
+                          aria-label="Stop">
+                          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                            <path d="M7 7h10v10H7z" fill="currentColor"></path>
+                          </svg>
+                        </button>
+
+                        <div class="audioBar__track" role="group" aria-label="Progress">
+                          <input class="audioBar__range" type="range" min="0" max="1000" value="0" step="1"
+                            aria-label="Seek" />
+                          <div class="audioBar__progress" aria-hidden="true"></div>
+                        </div>
+
+                        <div class="audioBar__time" aria-label="Time">
+                          <span class="audioBar__tNow">0:00</span>
+                          <span class="audioBar__tSep">/</span>
+                          <span class="audioBar__tDur">0:00</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- TTS -->
+                    <div class="asrtts__panel">
+                      <div class="asrtts__label">Text → Speech (TTS)</div>
+
+                      <img id="ttsImg" class="asrtts__img" src="assets/examples/TTS_1.png" alt="TTS example 1" />
+
+                      <audio id="ttsAudio" preload="metadata" src="assets/examples/TTS_1.wav"></audio>
+
+                      <div class="audioBar" data-player="tts" aria-label="TTS audio player">
+                        <button class="audioBar__btn audioBar__btn--play" type="button" data-action="toggle"
+                          aria-label="Play">
+                          <svg class="audioBar__icon audioBar__icon--play" viewBox="0 0 24 24" width="18" height="18"
+                            aria-hidden="true">
+                            <path d="M8 5v14l11-7z" fill="currentColor"></path>
+                          </svg>
+                          <svg class="audioBar__icon audioBar__icon--pause" viewBox="0 0 24 24" width="18" height="18"
+                            aria-hidden="true">
+                            <path d="M7 6h4v12H7zM13 6h4v12h-4z" fill="currentColor"></path>
+                          </svg>
+                        </button>
+
+                        <button class="audioBar__btn audioBar__btn--stop" type="button" data-action="stop"
+                          aria-label="Stop">
+                          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                            <path d="M7 7h10v10H7z" fill="currentColor"></path>
+                          </svg>
+                        </button>
+
+                        <div class="audioBar__track" role="group" aria-label="Progress">
+                          <input class="audioBar__range" type="range" min="0" max="1000" value="0" step="1"
+                            aria-label="Seek" />
+                          <div class="audioBar__progress" aria-hidden="true"></div>
+                        </div>
+
+                        <div class="audioBar__time" aria-label="Time">
+                          <span class="audioBar__tNow">0:00</span>
+                          <span class="audioBar__tSep">/</span>
+                          <span class="audioBar__tDur">0:00</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </section>
 
             <style>
-              /* ===== ASR & TTS Cards ===== */
-              #ex-asr-tts .asrtts-wrap{
+              /* ===============================
+                ASR & TTS (clean PNG + audio bar)
+              ================================ */
+
+              #ex-asr-tts .asrtts {
                 width: 100%;
                 max-width: 980px;
                 margin: 0 auto;
-                display: grid;
-                grid-template-columns: 1.35fr 0.65fr;
-                gap: 14px;
-                align-items: stretch;
               }
 
-              @media (max-width: 860px){
-                #ex-asr-tts .asrtts-wrap{
-                  grid-template-columns: 1fr;
-                }
-                #ex-asr-tts .asrtts-next{
-                  position: static;
-                  width: 100%;
-                  margin-top: 12px;
-                  justify-content: center;
-                  transform: none;
-                  right: auto;
-                  top: auto;
-                }
-                #ex-asr-tts .asrtts-card--audio{
-                  padding-right: 14px;
-                }
-              }
-
-              #ex-asr-tts .asrtts-card{
-                background: #fff;
-                border: 1px solid #111; /* black outline */
-                border-radius: 14px;
-                padding: 14px 14px;
-                box-shadow: none;
-              }
-
-              /* left card */
-              #ex-asr-tts .asrtts-card__head{
+              #ex-asr-tts .asrtts__head {
                 display: flex;
-                justify-content: flex-start;
-                margin-bottom: 10px;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 14px;
               }
 
-              #ex-asr-tts .asrtts-badge{
+              #ex-asr-tts .asrtts__badge {
                 font-size: 12px;
                 line-height: 1;
-                padding: 7px 10px;
+                padding: 8px 10px;
                 border-radius: 999px;
-                border: 1px solid rgba(17,17,17,0.25);
-                background: rgba(17,17,17,0.03);
-                color: rgba(17,17,17,0.85);
-                font-weight: 700;
+                background: rgba(17, 17, 17, 0.05);
+                color: rgba(17, 17, 17, 0.85);
+                font-weight: 750;
               }
 
-              #ex-asr-tts .asrtts-text{
-                margin: 0;
-                font-size: 15px;
-                line-height: 1.55;
-                color: rgba(17,17,17,0.92);
-                white-space: pre-wrap;
+              #ex-asr-tts .asrtts__next {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 12px;
+                border-radius: 999px;
+                border: 1px solid rgba(17, 17, 17, 0.18);
+                background: #fff;
+                color: rgba(17, 17, 17, 0.92);
+                cursor: pointer;
+                user-select: none;
+                font-weight: 750;
               }
 
-              /* right card */
-              #ex-asr-tts .asrtts-card--audio{
-                position: relative;
-                padding-right: 58px; /* space for next button */
+              #ex-asr-tts .asrtts__next:hover {
+                background: rgba(17, 17, 17, 0.03);
               }
 
-              #ex-asr-tts .asrtts-audio-block{
+              #ex-asr-tts .asrtts__grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 22px;
+                align-items: start;
+              }
+
+              @media (max-width: 860px) {
+                #ex-asr-tts .asrtts__grid {
+                  grid-template-columns: 1fr;
+                  gap: 18px;
+                }
+              }
+
+              #ex-asr-tts .asrtts__panel {
                 display: grid;
                 gap: 10px;
               }
 
-              #ex-asr-tts .asrtts-label{
+              #ex-asr-tts .asrtts__label {
                 font-size: 12px;
                 font-weight: 800;
                 letter-spacing: 0.01em;
-                color: rgba(17,17,17,0.78);
+                color: rgba(17, 17, 17, 0.70);
               }
 
-              #ex-asr-tts .asrtts-play{
+              /* PNG placement: no outline/background */
+              #ex-asr-tts .asrtts__img {
                 width: 100%;
-                display: inline-flex;
+                height: auto;
+                display: block;
+                border: 0;
+                border-radius: 0;
+                background: transparent;
+                box-shadow: none;
+                outline: none;
+              }
+
+              /* ===============================
+                Audio Bar (mimic clean browser bar)
+              ================================ */
+
+              #ex-asr-tts .audioBar {
+                display: flex;
                 align-items: center;
-                justify-content: center;
-                gap: 8px;
-
-                padding: 11px 12px;
-                border-radius: 12px;
-                border: 1px solid rgba(17,17,17,0.35);
-                background: #fff;
-                color: #111;
-                font-weight: 800;
-                cursor: pointer;
-                user-select: none;
-              }
-
-              #ex-asr-tts .asrtts-play:hover{
-                background: rgba(17,17,17,0.03);
-              }
-
-              #ex-asr-tts .asrtts-play.is-playing{
-                background: rgba(17,17,17,0.06);
-              }
-
-              #ex-asr-tts .asrtts-divider{
-                height: 1px;
-                background: rgba(17,17,17,0.12);
-                margin: 12px 0;
-              }
-
-              /* next button pinned on the right side of audio card */
-              #ex-asr-tts .asrtts-next{
-                position: absolute;
-                top: 50%;
-                right: 10px;
-                transform: translateY(-50%);
-
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-
+                gap: 10px;
                 padding: 10px 10px;
                 border-radius: 999px;
-                border: 1px solid rgba(17,17,17,0.35);
+                border: 1px solid rgba(17, 17, 17, 0.14);
+                background: rgba(17, 17, 17, 0.02);
+              }
+
+              #ex-asr-tts .audioBar__btn {
+                width: 36px;
+                height: 36px;
+                border-radius: 999px;
+                border: 1px solid rgba(17, 17, 17, 0.14);
                 background: #fff;
-                color: #111;
-                font-weight: 900;
+                color: rgba(17, 17, 17, 0.92);
+                display: inline-grid;
+                place-items: center;
+                cursor: pointer;
+                user-select: none;
+                flex: 0 0 auto;
+              }
+
+              #ex-asr-tts .audioBar__btn:hover {
+                background: rgba(17, 17, 17, 0.03);
+              }
+
+              #ex-asr-tts .audioBar__icon--pause {
+                display: none;
+              }
+
+              #ex-asr-tts .audioBar.is-playing .audioBar__icon--play {
+                display: none;
+              }
+
+              #ex-asr-tts .audioBar.is-playing .audioBar__icon--pause {
+                display: block;
+              }
+
+              #ex-asr-tts .audioBar__track {
+                position: relative;
+                flex: 1 1 auto;
+                min-width: 140px;
+                height: 18px;
+                display: grid;
+                align-items: center;
+              }
+
+              /* Range is invisible but interactive; progress is drawn underneath */
+              #ex-asr-tts .audioBar__range {
+                width: 100%;
+                height: 18px;
+                margin: 0;
+                background: transparent;
+                -webkit-appearance: none;
+                appearance: none;
+                position: relative;
+                z-index: 2;
                 cursor: pointer;
               }
 
-              #ex-asr-tts .asrtts-next:hover{
-                background: rgba(17,17,17,0.03);
+              /* Track */
+              #ex-asr-tts .audioBar__range::-webkit-slider-runnable-track {
+                height: 6px;
+                border-radius: 999px;
+                background: rgba(17, 17, 17, 0.18);
               }
 
-              #ex-asr-tts .asrtts-next__txt{
+              #ex-asr-tts .audioBar__range::-moz-range-track {
+                height: 6px;
+                border-radius: 999px;
+                background: rgba(17, 17, 17, 0.18);
+              }
+
+              /* Thumb */
+              #ex-asr-tts .audioBar__range::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 12px;
+                height: 12px;
+                border-radius: 999px;
+                background: rgba(17, 17, 17, 0.65);
+                border: 2px solid #fff;
+                margin-top: -3px; /* centers thumb on 6px track */
+              }
+
+              #ex-asr-tts .audioBar__range::-moz-range-thumb {
+                width: 12px;
+                height: 12px;
+                border-radius: 999px;
+                background: rgba(17, 17, 17, 0.65);
+                border: 2px solid #fff;
+              }
+
+              /* Progress bar overlay (filled portion) */
+              #ex-asr-tts .audioBar__progress {
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                height: 6px;
+                width: 0%;
+                border-radius: 999px;
+                background: rgba(17, 17, 17, 0.45);
+                z-index: 1;
+                pointer-events: none;
+              }
+
+              #ex-asr-tts .audioBar__time {
+                flex: 0 0 auto;
                 font-size: 12px;
+                font-weight: 750;
+                color: rgba(17, 17, 17, 0.72);
+                min-width: 78px;
+                text-align: right;
+              }
+
+              #ex-asr-tts .audioBar__tSep {
+                opacity: 0.6;
+                padding: 0 4px;
               }
             </style>
 
@@ -1504,107 +1640,184 @@
               (() => {
                 const N = 5;
 
-                const idxEl  = document.getElementById("asrttsIdx");
-                const textEl = document.getElementById("asrttsText");
+                const idxEl = document.getElementById("asrttsIdx");
+                const nextBtn = document.getElementById("asrttsNextBtn");
 
+                const asrImg = document.getElementById("asrImg");
+                const ttsImg = document.getElementById("ttsImg");
                 const asrAudio = document.getElementById("asrAudio");
                 const ttsAudio = document.getElementById("ttsAudio");
 
-                const asrBtn = document.getElementById("asrPlayBtn");
-                const ttsBtn = document.getElementById("ttsPlayBtn");
-
-                const asrTxt = document.getElementById("asrPlayTxt");
-                const ttsTxt = document.getElementById("ttsPlayTxt");
-
-                const nextBtn = document.getElementById("asrttsNextBtn");
-
-                if (!idxEl || !textEl || !asrAudio || !ttsAudio || !asrBtn || !ttsBtn || !nextBtn) return;
+                if (!idxEl || !nextBtn || !asrImg || !ttsImg || !asrAudio || !ttsAudio) return;
                 if (nextBtn.dataset.init === "1") return;
                 nextBtn.dataset.init = "1";
 
-                // ---- 5 example texts ----
-                const TEXTS = [
-                  "Mathematics is a field of study that discovers and organizes methods, theories, and theorems that are developed and improved for the needs of empirical sciences and mathematics itself. There are many areas of mathematics, which include number theory, algebra, geometry, analysis, and set theory.",
-                  "I am an omnimodal unified diffusion language model developed by AIDAS Lab. I can understand and generate text, images, speech, and video within a single architecture.",
-                  "All our dreams can come true, if we have the courage to pursue them.",
-                  "Diffusion Language Models, DLMs are a generative AI approach that creates text by iteratively refining noise into coherent, meaningful sentences, rather than generating text one word at a time like traditional autoregressive Large Language Models.",
-                  "Attention Is All You Need is a 2017 research paper in machine learning authored by eight scientists working at Google. The paper introduced a new deep learning architecture known as the transformer, based on the attention mechanism."
-                ];
+                const fmt = (sec) => {
+                  if (!isFinite(sec) || sec < 0) sec = 0;
+                  const m = Math.floor(sec / 60);
+                  const s = Math.floor(sec % 60);
+                  return `${m}:${String(s).padStart(2, "0")}`;
+                };
 
-                const stopAll = () => {
-                  [asrAudio, ttsAudio].forEach(a => {
-                    try { a.pause(); a.currentTime = 0; } catch {}
+                const players = {
+                  asr: {
+                    root: document.querySelector('#ex-asr-tts .audioBar[data-player="asr"]'),
+                    audio: asrAudio
+                  },
+                  tts: {
+                    root: document.querySelector('#ex-asr-tts .audioBar[data-player="tts"]'),
+                    audio: ttsAudio
+                  }
+                };
+
+                const getUI = (root) => ({
+                  playBtn: root.querySelector('[data-action="toggle"]'),
+                  stopBtn: root.querySelector('[data-action="stop"]'),
+                  range: root.querySelector(".audioBar__range"),
+                  prog: root.querySelector(".audioBar__progress"),
+                  tNow: root.querySelector(".audioBar__tNow"),
+                  tDur: root.querySelector(".audioBar__tDur"),
+                });
+
+                const stop = (key) => {
+                  const p = players[key];
+                  const { root, audio } = p;
+                  const ui = getUI(root);
+
+                  try { audio.pause(); } catch {}
+                  try { audio.currentTime = 0; } catch {}
+
+                  root.classList.remove("is-playing");
+                  ui.range.value = "0";
+                  ui.prog.style.width = "0%";
+                  ui.tNow.textContent = "0:00";
+                };
+
+                const stopOther = (key) => {
+                  Object.keys(players).forEach(k => {
+                    if (k !== key) stop(k);
                   });
-                  asrBtn.classList.remove("is-playing");
-                  ttsBtn.classList.remove("is-playing");
-                  asrTxt.textContent = "Play";
-                  ttsTxt.textContent = "Play";
                 };
 
-                const setExample = (i) => {
-                  idxEl.textContent = String(i);
-                  textEl.textContent = TEXTS[i - 1] || "";
-
-                  asrAudio.src = `assets/examples/ASR_${i}.wav`;
-                  ttsAudio.src = `assets/examples/TTS_${i}.wav`;
-
-                  asrAudio.load();
-                  ttsAudio.load();
-
-                  stopAll();
+                const syncDuration = (key) => {
+                  const { root, audio } = players[key];
+                  const ui = getUI(root);
+                  ui.tDur.textContent = fmt(audio.duration || 0);
                 };
 
-                const togglePlay = async (which) => {
-                  const audio = which === "asr" ? asrAudio : ttsAudio;
-                  const btn   = which === "asr" ? asrBtn : ttsBtn;
-                  const txt   = which === "asr" ? asrTxt : ttsTxt;
+                const syncProgress = (key) => {
+                  const { root, audio } = players[key];
+                  const ui = getUI(root);
 
-                  const otherAudio = which === "asr" ? ttsAudio : asrAudio;
-                  const otherBtn   = which === "asr" ? ttsBtn : asrBtn;
-                  const otherTxt   = which === "asr" ? ttsTxt : asrTxt;
+                  const dur = audio.duration || 0;
+                  const cur = audio.currentTime || 0;
 
-                  // stop the other one
-                  try { otherAudio.pause(); otherAudio.currentTime = 0; } catch {}
-                  otherBtn.classList.remove("is-playing");
-                  otherTxt.textContent = "Play";
+                  ui.tNow.textContent = fmt(cur);
+
+                  if (dur > 0) {
+                    const x = Math.max(0, Math.min(1, cur / dur));
+                    const v = Math.round(x * 1000);
+                    ui.range.value = String(v);
+                    ui.prog.style.width = `${x * 100}%`;
+                  } else {
+                    ui.range.value = "0";
+                    ui.prog.style.width = "0%";
+                  }
+                };
+
+                const playToggle = async (key) => {
+                  const { root, audio } = players[key];
+                  const ui = getUI(root);
+
+                  stopOther(key);
 
                   if (!audio.paused) {
                     try { audio.pause(); } catch {}
-                    btn.classList.remove("is-playing");
-                    txt.textContent = "Play";
+                    root.classList.remove("is-playing");
                     return;
                   }
 
                   try {
                     await audio.play();
-                    btn.classList.add("is-playing");
-                    txt.textContent = "Pause";
+                    root.classList.add("is-playing");
+                    // ensure duration shown
+                    syncDuration(key);
                   } catch {
-                    btn.classList.remove("is-playing");
-                    txt.textContent = "Play";
+                    root.classList.remove("is-playing");
                   }
                 };
 
-                asrAudio.addEventListener("ended", () => {
-                  asrBtn.classList.remove("is-playing");
-                  asrTxt.textContent = "Play";
-                });
-                ttsAudio.addEventListener("ended", () => {
-                  ttsBtn.classList.remove("is-playing");
-                  ttsTxt.textContent = "Play";
-                });
+                const bindPlayer = (key) => {
+                  const { root, audio } = players[key];
+                  if (!root) return;
 
-                asrBtn.addEventListener("click", () => togglePlay("asr"));
-                ttsBtn.addEventListener("click", () => togglePlay("tts"));
+                  const ui = getUI(root);
+
+                  ui.playBtn.addEventListener("click", () => playToggle(key));
+                  ui.stopBtn.addEventListener("click", () => stop(key));
+
+                  audio.addEventListener("loadedmetadata", () => {
+                    syncDuration(key);
+                    syncProgress(key);
+                  });
+
+                  audio.addEventListener("timeupdate", () => syncProgress(key));
+
+                  audio.addEventListener("ended", () => {
+                    root.classList.remove("is-playing");
+                    syncProgress(key);
+                  });
+
+                  // seeking
+                  ui.range.addEventListener("input", () => {
+                    const dur = audio.duration || 0;
+                    const v = Number(ui.range.value) / 1000;
+                    ui.prog.style.width = `${Math.max(0, Math.min(1, v)) * 100}%`;
+                    if (dur > 0) ui.tNow.textContent = fmt(v * dur);
+                  });
+
+                  ui.range.addEventListener("change", () => {
+                    const dur = audio.duration || 0;
+                    if (dur <= 0) return;
+                    const v = Number(ui.range.value) / 1000;
+                    audio.currentTime = Math.max(0, Math.min(dur, v * dur));
+                  });
+                };
+
+                bindPlayer("asr");
+                bindPlayer("tts");
 
                 let curr = 1;
+
+                const setExample = (i) => {
+                  curr = i;
+                  idxEl.textContent = String(i);
+
+                  // stop both players before swapping sources
+                  stop("asr");
+                  stop("tts");
+
+                  // swap PNGs
+                  asrImg.src = `assets/examples/ASR_${i}.png`;
+                  ttsImg.src = `assets/examples/TTS_${i}.png`;
+                  asrImg.alt = `ASR example ${i}`;
+                  ttsImg.alt = `TTS example ${i}`;
+
+                  // swap WAVs
+                  asrAudio.src = `assets/examples/ASR_${i}.wav`;
+                  ttsAudio.src = `assets/examples/TTS_${i}.wav`;
+
+                  asrAudio.load();
+                  ttsAudio.load();
+                };
+
                 nextBtn.addEventListener("click", () => {
-                  curr = (curr % N) + 1;
-                  setExample(curr);
+                  const next = (curr % N) + 1;
+                  setExample(next);
                 });
 
                 // init
-                setExample(curr);
+                setExample(1);
               })();
             </script>
 
