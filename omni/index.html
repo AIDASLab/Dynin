@@ -1276,7 +1276,7 @@
                         </svg>
                         <span id="asrPlayTxt">Play</span>
                       </button>
-                      <audio id="asrAudio" preload="metadata" src="assets/ASR_1.wav"></audio>
+                      <audio id="asrAudio" preload="metadata" src="assets/examples/ASR_1.wav"></audio>
                     </div>
 
                     <div class="asrtts-divider"></div>
@@ -1289,7 +1289,7 @@
                         </svg>
                         <span id="ttsPlayTxt">Play</span>
                       </button>
-                      <audio id="ttsAudio" preload="metadata" src="assets/TTS_1.wav"></audio>
+                      <audio id="ttsAudio" preload="metadata" src="assets/examples/TTS_1.wav"></audio>
                     </div>
 
                     <!-- Next button on the right side -->
@@ -1491,8 +1491,8 @@
                   idxEl.textContent = String(i);
                   textEl.textContent = TEXTS[i - 1] || "";
 
-                  asrAudio.src = `assets/ASR_${i}.wav`;
-                  ttsAudio.src = `assets/TTS_${i}.wav`;
+                  asrAudio.src = `assets/examples/ASR_${i}.wav`;
+                  ttsAudio.src = `assets/examples/TTS_${i}.wav`;
 
                   asrAudio.load();
                   ttsAudio.load();
