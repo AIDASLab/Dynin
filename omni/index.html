@@ -661,8 +661,26 @@
                 <h3>Video Understanding</h3>
               </div>
               <p class="collection-desc">Placeholder — add your video understanding examples here.</p>
+
               <div class="collection-surface">
-                <div class="examples-placeholder__box">Video QA / temporal reasoning examples</div>
+                <div class="sweep-stage" id="vuStage" aria-label="Video understanding samples (auto-sweep)">
+                  <!-- current -->
+                  <img
+                    class="sweep-img sweep-img--a"
+                    src="assets/examples/vid_1.gif"
+                    alt="Video understanding sample 1"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <!-- next -->
+                  <img
+                    class="sweep-img sweep-img--b"
+                    src="assets/examples/vid_2.gif"
+                    alt="Video understanding sample 2"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
               </div>
             </section>
 
@@ -977,21 +995,21 @@
             <section id="ex-image-editing" class="collection-container" data-collection>
               <div class="collection-title">
                 <h3>Image Editing</h3>
-              </div>              
+              </div>
 
               <div class="collection-surface">
-                <div class="ie-stage" id="ieStage" aria-label="Image editing sample (auto-fade)">
-                  <!-- bottom/current -->
+                <div class="sweep-stage" id="ieStage" aria-label="Image editing samples (auto-sweep)">
+                  <!-- current -->
                   <img
-                    class="ie-img ie-img--a"
+                    class="sweep-img sweep-img--a"
                     src="assets/examples/img_edit_1.png"
                     alt="Image editing sample 1"
                     loading="lazy"
                     decoding="async"
                   />
-                  <!-- top/next -->
+                  <!-- next -->
                   <img
-                    class="ie-img ie-img--b"
+                    class="sweep-img sweep-img--b"
                     src="assets/examples/img_edit_2.png"
                     alt="Image editing sample 2"
                     loading="lazy"
@@ -1002,140 +1020,195 @@
             </section>
 
             <style>
-              /* ===== Image Editing Auto Fade ===== */
-              #ex-image-editing .ie-stage{
+              /* ===== Shared Sweep Slider (Video + Image Editing) ===== */
+
+              /* stage: no box look */
+              #ex-video-understanding .sweep-stage,
+              #ex-image-editing .sweep-stage{
                 position: relative;
                 width: 100%;
                 max-width: 980px;
                 margin: 0 auto;
 
-                /* remove the box look */
                 border: 0;
                 background: transparent;
                 border-radius: 0;
-                overflow: visible;
+                overflow: hidden; /* important: hide sliding images */
               }
 
-              /* keep a stable height while images load (tweak aspect ratio if you know it) */
-              #ex-image-editing .ie-stage::before{
+              /* stable height while assets load (adjust if needed) */
+              #ex-video-understanding .sweep-stage::before,
+              #ex-image-editing .sweep-stage::before{
                 content:"";
                 display:block;
-                padding-top: 52%; /* ~wide image; adjust (e.g., 45% / 60%) if needed */
+                padding-top: 52%;
               }
 
-              #ex-image-editing .ie-img{
+              /* images */
+              #ex-video-understanding .sweep-img,
+              #ex-image-editing .sweep-img{
                 position: absolute;
                 inset: 0;
                 width: 100%;
                 height: 100%;
-                object-fit: contain; /* long screenshot style; use cover if you prefer */
+                object-fit: contain;
                 display: block;
-                transform: translateZ(0);
-                will-change: opacity;
+
+                transform: translate3d(0,0,0);
+                will-change: transform;
               }
 
-              /* default visibilities */
-              #ex-image-editing .ie-img--a{ opacity: 1; }
-              #ex-image-editing .ie-img--b{ opacity: 0; }
-
-              /* fade transition */
-              #ex-image-editing .ie-stage.is-crossfade .ie-img--a{ opacity: 0; }
-              #ex-image-editing .ie-stage.is-crossfade .ie-img--b{ opacity: 1; }
-
-              /* duration set to 5s (your request) */
-              #ex-image-editing .ie-img{
-                transition: opacity 5000ms cubic-bezier(.2,.8,.2,1);
+              /* default positions (A visible, B parked to the right) */
+              #ex-video-understanding .sweep-img--a,
+              #ex-image-editing .sweep-img--a{
+                transform: translate3d(0%, 0, 0);
+                z-index: 2;
+              }
+              #ex-video-understanding .sweep-img--b,
+              #ex-image-editing .sweep-img--b{
+                transform: translate3d(100%, 0, 0);
+                z-index: 1;
               }
 
-              /* Reduced motion: disable transitions */
+              /* sweep state:
+                - A exits left
+                - B enters to center */
+              #ex-video-understanding .sweep-stage.is-sweep .sweep-img--a,
+              #ex-image-editing .sweep-stage.is-sweep .sweep-img--a{
+                transform: translate3d(-100%, 0, 0);
+              }
+              #ex-video-understanding .sweep-stage.is-sweep .sweep-img--b,
+              #ex-image-editing .sweep-stage.is-sweep .sweep-img--b{
+                transform: translate3d(0%, 0, 0);
+              }
+
+              /* transition timing */
+              #ex-video-understanding .sweep-img,
+              #ex-image-editing .sweep-img{
+                transition: transform 1200ms cubic-bezier(.2,.8,.2,1);
+              }
+
+              /* Reduced motion */
               @media (prefers-reduced-motion: reduce){
-                #ex-image-editing .ie-img{ transition: none !important; }
+                #ex-video-understanding .sweep-img,
+                #ex-image-editing .sweep-img{
+                  transition: none !important;
+                }
+                #ex-video-understanding .sweep-stage,
+                #ex-image-editing .sweep-stage{
+                  overflow: visible; /* avoid weird clipping when transitions are off */
+                }
               }
             </style>
 
             <script>
-              // ===== Image Editing Auto Fade (random among img_edit_1..5) =====
-              (() => {
-                const stage = document.getElementById("ieStage");
+              // ===== Generic Sweep Initializer (reusable) =====
+              function initSweepStage({
+                stageId,
+                basePath,
+                ext,
+                count,
+                holdMs = 10000,        // ~10s per image fully shown
+                transitionMs = 1200,   // must match CSS
+                random = true          // set false to go 1->2->3->...
+              }) {
+                const stage = document.getElementById(stageId);
                 if (!stage) return;
+                if (stage.dataset.sweepInit === "1") return;
+                stage.dataset.sweepInit = "1";
 
-                // Safety: only init once
-                if (stage.dataset.ieInit === "1") return;
-                stage.dataset.ieInit = "1";
-
-                const basePath = "assets/examples/img_edit_";
-                const ext = ".png";
-                const N = 5;
-
-                const TRANSITION_MS = 5000;  // fade duration (~5s)
-                const HOLD_MS = 5000;        // time to keep an image fully visible between fades
-                                            // (net: ~10s per change including fade; adjust if you want faster)
-
-                const imgA = stage.querySelector(".ie-img--a");
-                const imgB = stage.querySelector(".ie-img--b");
+                const imgA = stage.querySelector(".sweep-img--a");
+                const imgB = stage.querySelector(".sweep-img--b");
                 if (!imgA || !imgB) return;
 
+                const srcOf = (i) => `${basePath}${i}${ext}`;
                 const preload = (src) => { const im = new Image(); im.src = src; };
 
-                // preload all
-                for (let i = 1; i <= N; i++) preload(`${basePath}${i}${ext}`);
+                for (let i = 1; i <= count; i++) preload(srcOf(i));
 
-                const pickNext = (curr) => {
-                  // random, but avoid immediate repeats
+                const setImg = (el, idx, altPrefix) => {
+                  el.src = srcOf(idx);
+                  el.alt = `${altPrefix} ${idx}`;
+                };
+
+                const pickNextRandom = (curr) => {
                   let nxt = curr;
-                  while (nxt === curr) nxt = 1 + Math.floor(Math.random() * N);
+                  while (nxt === curr) nxt = 1 + Math.floor(Math.random() * count);
                   return nxt;
                 };
 
                 let curr = 1;
-                let showingA = true;
+                let next = random ? pickNextRandom(curr) : (curr % count) + 1;
                 let timer = null;
 
-                const setImg = (el, idx) => {
-                  el.src = `${basePath}${idx}${ext}`;
-                  el.alt = `Image editing sample ${idx}`;
-                };
+                const altPrefix = stageId === "vuStage"
+                  ? "Video understanding sample"
+                  : "Image editing sample";
 
-                // init: A=curr, B=next (hidden)
-                setImg(imgA, curr);
-                let next = pickNext(curr);
-                setImg(imgB, next);
+                // init
+                setImg(imgA, curr, altPrefix);
+                setImg(imgB, next, altPrefix);
 
                 const step = () => {
-                  // flip crossfade state (A<->B)
-                  stage.classList.toggle("is-crossfade");
+                  stage.classList.toggle("is-sweep");
 
-                  // after the fade completes, update the now-hidden layer to the next random image
+                  // after transition completes, update the now-hidden layer and park it right
                   window.setTimeout(() => {
                     curr = next;
-                    next = pickNext(curr);
+                    next = random ? pickNextRandom(curr) : (curr % count) + 1;
 
-                    // determine which layer is hidden now
-                    // when is-crossfade is ON: B visible, A hidden
-                    // when OFF: A visible, B hidden
-                    const cross = stage.classList.contains("is-crossfade");
-                    const hiddenEl = cross ? imgA : imgB;
+                    const sweeping = stage.classList.contains("is-sweep");
+                    const hiddenEl = sweeping ? imgA : imgB; // hidden offscreen (left or right depending on state)
 
-                    setImg(hiddenEl, next);
-                  }, TRANSITION_MS + 30);
+                    // set new image on the hidden layer
+                    setImg(hiddenEl, next, altPrefix);
 
-                  // schedule next cycle: wait for fade to finish + hold time
-                  timer = window.setTimeout(step, TRANSITION_MS + HOLD_MS);
+                    // IMPORTANT: park hidden layer to the right for the next "enter from right"
+                    hiddenEl.style.transform = "translate3d(100%,0,0)";
+
+                    // allow browser to apply inline transform, then remove it so CSS controls again
+                    requestAnimationFrame(() => {
+                      hiddenEl.style.transform = "";
+                    });
+                  }, transitionMs + 30);
+
+                  timer = window.setTimeout(step, holdMs);
                 };
 
-                // kick off after a small random delay so page doesn’t feel "instant"
-                timer = window.setTimeout(step, 800 + Math.floor(Math.random() * 1200));
-
-                // Respect reduced motion: stop auto-anim if desired
+                // Reduced motion => no autoplay
                 const mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
                 if (mq && mq.matches) {
-                  if (timer) window.clearTimeout(timer);
-                  stage.classList.remove("is-crossfade");
-                  // show just the first image
-                  setImg(imgA, 1);
-                  setImg(imgB, 1);
+                  stage.classList.remove("is-sweep");
+                  setImg(imgA, 1, altPrefix);
+                  setImg(imgB, 1, altPrefix);
+                  return;
                 }
-              })();
+
+                // start
+                timer = window.setTimeout(step, 800 + Math.floor(Math.random() * 900));
+              }
+
+              // Video Understanding: vid_1..vid_5.gif
+              initSweepStage({
+                stageId: "vuStage",
+                basePath: "assets/examples/vid_",
+                ext: ".gif",
+                count: 5,
+                holdMs: 10000,
+                transitionMs: 1200,
+                random: true
+              });
+
+              // Image Editing: img_edit_1..img_edit_5.png
+              initSweepStage({
+                stageId: "ieStage",
+                basePath: "assets/examples/img_edit_",
+                ext: ".png",
+                count: 5,
+                holdMs: 10000,
+                transitionMs: 1200,
+                random: true
+              });
             </script>
 
             <!-- 6) ASR & TTS -->
