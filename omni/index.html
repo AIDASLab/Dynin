@@ -1041,34 +1041,56 @@
 
             <style>
               /* ===== Shared Sweep Slider (Text + Image Understanding + Video + Image Editing) ===== */
-            
-              /* stage: no box look */
+
+              /* stage container (same width everywhere) */
               #ex-text-reasoning .sweep-stage,
               #ex-image-understanding .sweep-stage,
               #ex-video-understanding .sweep-stage,
               #ex-image-editing .sweep-stage{
                 position: relative;
                 width: 100%;
-                max-width: 980px;
+                max-width: 980px;     /* same width for ALL */
                 margin: 0 auto;
-            
+
                 border: 0;
                 background: transparent;
                 border-radius: 0;
-                overflow: hidden; /* important: hide sliding images */
+                overflow: hidden;     /* required for sweep */
               }
-            
-              /* stable height while assets load (adjust if needed) */
-              #ex-text-reasoning .sweep-stage::before,
-              #ex-image-understanding .sweep-stage::before,
-              #ex-video-understanding .sweep-stage::before,
+
+              /* ===== Individual aspect ratios (NO cropping, better visual scale) ===== */
+
+              /* Text screenshots (usually taller) */
+              #ex-text-reasoning .sweep-stage::before{
+                content:"";
+                display:block;
+                padding-top: 70%;     /* taller box */
+              }
+
+              /* Image understanding */
+              #ex-image-understanding .sweep-stage::before{
+                content:"";
+                display:block;
+                padding-top: 56%;
+              }
+
+              /* Video understanding (wider format) */
+              #ex-video-understanding .sweep-stage::before{
+                content:"";
+                display:block;
+                padding-top: 45%;
+              }
+
+              /* Image editing */
               #ex-image-editing .sweep-stage::before{
                 content:"";
                 display:block;
                 padding-top: 52%;
               }
-            
-              /* images */
+
+
+              /* ===== Images ===== */
+
               #ex-text-reasoning .sweep-img,
               #ex-image-understanding .sweep-img,
               #ex-video-understanding .sweep-img,
@@ -1077,14 +1099,16 @@
                 inset: 0;
                 width: 100%;
                 height: 100%;
-                object-fit: cover;      /* fill the stage */
+
+                object-fit: contain;       /* NO cropping */
                 object-position: center;
+
                 display: block;
-            
                 transform: translate3d(0,0,0);
                 will-change: transform;
               }
-            
+
+
               /* default positions (A visible, B parked to the right) */
               #ex-text-reasoning .sweep-img--a,
               #ex-image-understanding .sweep-img--a,
@@ -1093,6 +1117,7 @@
                 transform: translate3d(0%, 0, 0);
                 z-index: 2;
               }
+
               #ex-text-reasoning .sweep-img--b,
               #ex-image-understanding .sweep-img--b,
               #ex-video-understanding .sweep-img--b,
@@ -1100,31 +1125,33 @@
                 transform: translate3d(100%, 0, 0);
                 z-index: 1;
               }
-            
-              /* sweep state:
-                - A exits left
-                - B enters to center */
+
+
+              /* sweep animation */
               #ex-text-reasoning .sweep-stage.is-sweep .sweep-img--a,
               #ex-image-understanding .sweep-stage.is-sweep .sweep-img--a,
               #ex-video-understanding .sweep-stage.is-sweep .sweep-img--a,
               #ex-image-editing .sweep-stage.is-sweep .sweep-img--a{
                 transform: translate3d(-100%, 0, 0);
               }
+
               #ex-text-reasoning .sweep-stage.is-sweep .sweep-img--b,
               #ex-image-understanding .sweep-stage.is-sweep .sweep-img--b,
               #ex-video-understanding .sweep-stage.is-sweep .sweep-img--b,
               #ex-image-editing .sweep-stage.is-sweep .sweep-img--b{
                 transform: translate3d(0%, 0, 0);
               }
-            
-              /* transition timing */
+
+
+              /* transition */
               #ex-text-reasoning .sweep-img,
               #ex-image-understanding .sweep-img,
               #ex-video-understanding .sweep-img,
               #ex-image-editing .sweep-img{
                 transition: transform 1200ms cubic-bezier(.2,.8,.2,1);
               }
-            
+
+
               /* Reduced motion */
               @media (prefers-reduced-motion: reduce){
                 #ex-text-reasoning .sweep-img,
@@ -1133,6 +1160,7 @@
                 #ex-image-editing .sweep-img{
                   transition: none !important;
                 }
+
                 #ex-text-reasoning .sweep-stage,
                 #ex-image-understanding .sweep-stage,
                 #ex-video-understanding .sweep-stage,
