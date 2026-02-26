@@ -1036,31 +1036,34 @@
             </section>
 
             <style>
-              /* ===== Shared Sweep Slider (Video + Image Editing) ===== */
-
+              /* ===== Shared Sweep Slider (Image Understanding + Video + Image Editing) ===== */
+            
               /* stage: no box look */
+              #ex-image-understanding .sweep-stage,
               #ex-video-understanding .sweep-stage,
               #ex-image-editing .sweep-stage{
                 position: relative;
                 width: 100%;
                 max-width: 980px;
                 margin: 0 auto;
-
+            
                 border: 0;
                 background: transparent;
                 border-radius: 0;
                 overflow: hidden; /* important: hide sliding images */
               }
-
+            
               /* stable height while assets load (adjust if needed) */
+              #ex-image-understanding .sweep-stage::before,
               #ex-video-understanding .sweep-stage::before,
               #ex-image-editing .sweep-stage::before{
                 content:"";
                 display:block;
                 padding-top: 52%;
               }
-
+            
               /* images */
+              #ex-image-understanding .sweep-img,
               #ex-video-understanding .sweep-img,
               #ex-image-editing .sweep-img{
                 position: absolute;
@@ -1069,54 +1072,61 @@
                 height: 100%;
                 object-fit: contain;
                 display: block;
-
+            
                 transform: translate3d(0,0,0);
                 will-change: transform;
               }
-
+            
               /* default positions (A visible, B parked to the right) */
+              #ex-image-understanding .sweep-img--a,
               #ex-video-understanding .sweep-img--a,
               #ex-image-editing .sweep-img--a{
                 transform: translate3d(0%, 0, 0);
                 z-index: 2;
               }
+              #ex-image-understanding .sweep-img--b,
               #ex-video-understanding .sweep-img--b,
               #ex-image-editing .sweep-img--b{
                 transform: translate3d(100%, 0, 0);
                 z-index: 1;
               }
-
+            
               /* sweep state:
                 - A exits left
                 - B enters to center */
+              #ex-image-understanding .sweep-stage.is-sweep .sweep-img--a,
               #ex-video-understanding .sweep-stage.is-sweep .sweep-img--a,
               #ex-image-editing .sweep-stage.is-sweep .sweep-img--a{
                 transform: translate3d(-100%, 0, 0);
               }
+              #ex-image-understanding .sweep-stage.is-sweep .sweep-img--b,
               #ex-video-understanding .sweep-stage.is-sweep .sweep-img--b,
               #ex-image-editing .sweep-stage.is-sweep .sweep-img--b{
                 transform: translate3d(0%, 0, 0);
               }
-
+            
               /* transition timing */
+              #ex-image-understanding .sweep-img,
               #ex-video-understanding .sweep-img,
               #ex-image-editing .sweep-img{
                 transition: transform 1200ms cubic-bezier(.2,.8,.2,1);
               }
-
+            
               /* Reduced motion */
               @media (prefers-reduced-motion: reduce){
+                #ex-image-understanding .sweep-img,
                 #ex-video-understanding .sweep-img,
                 #ex-image-editing .sweep-img{
                   transition: none !important;
                 }
+                #ex-image-understanding .sweep-stage,
                 #ex-video-understanding .sweep-stage,
                 #ex-image-editing .sweep-stage{
                   overflow: visible; /* avoid weird clipping when transitions are off */
                 }
               }
             </style>
-
+            
             <script>
               // ===== Generic Sweep Initializer (reusable) =====
               function initSweepStage({
@@ -1132,65 +1142,67 @@
                 if (!stage) return;
                 if (stage.dataset.sweepInit === "1") return;
                 stage.dataset.sweepInit = "1";
-
+            
                 const imgA = stage.querySelector(".sweep-img--a");
                 const imgB = stage.querySelector(".sweep-img--b");
                 if (!imgA || !imgB) return;
-
+            
                 const srcOf = (i) => `${basePath}${i}${ext}`;
                 const preload = (src) => { const im = new Image(); im.src = src; };
-
+            
                 for (let i = 1; i <= count; i++) preload(srcOf(i));
-
+            
                 const setImg = (el, idx, altPrefix) => {
                   el.src = srcOf(idx);
                   el.alt = `${altPrefix} ${idx}`;
                 };
-
+            
                 const pickNextRandom = (curr) => {
                   let nxt = curr;
                   while (nxt === curr) nxt = 1 + Math.floor(Math.random() * count);
                   return nxt;
                 };
-
+            
                 let curr = 1;
                 let next = random ? pickNextRandom(curr) : (curr % count) + 1;
                 let timer = null;
-
-                const altPrefix = stageId === "vuStage"
-                  ? "Video understanding sample"
-                  : "Image editing sample";
-
+            
+                // alt text prefix by stage
+                const altPrefix =
+                  stageId === "iuStage" ? "Image understanding sample" :
+                  stageId === "vuStage" ? "Video understanding sample" :
+                  "Image editing sample";
+            
                 // init
                 setImg(imgA, curr, altPrefix);
                 setImg(imgB, next, altPrefix);
-
+            
                 const step = () => {
                   stage.classList.toggle("is-sweep");
-
+            
                   // after transition completes, update the now-hidden layer and park it right
                   window.setTimeout(() => {
                     curr = next;
                     next = random ? pickNextRandom(curr) : (curr % count) + 1;
-
+            
                     const sweeping = stage.classList.contains("is-sweep");
                     const hiddenEl = sweeping ? imgA : imgB; // hidden offscreen (left or right depending on state)
-
+            
                     // set new image on the hidden layer
                     setImg(hiddenEl, next, altPrefix);
-
+            
                     // IMPORTANT: park hidden layer to the right for the next "enter from right"
                     hiddenEl.style.transform = "translate3d(100%,0,0)";
-
+            
                     // allow browser to apply inline transform, then remove it so CSS controls again
                     requestAnimationFrame(() => {
                       hiddenEl.style.transform = "";
                     });
                   }, transitionMs + 30);
-
+            
                   timer = window.setTimeout(step, holdMs);
                 };
-
+            
                 // Reduced motion => no autoplay
                 const mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
                 if (mq && mq.matches) {
@@ -1199,11 +1211,22 @@
                   setImg(imgB, 1, altPrefix);
                   return;
                 }
-
+            
                 // start
                 timer = window.setTimeout(step, 800 + Math.floor(Math.random() * 900));
               }
-
+            
+              // Image Understanding: mmu_1..mmu_5.png
+              initSweepStage({
+                stageId: "iuStage",
+                basePath: "assets/examples/mmu_",
+                ext: ".png",
+                count: 5,
+                holdMs: 10000,
+                transitionMs: 1200,
+                random: true
+              });
+            
               // Video Understanding: vid_1..vid_5.gif
               initSweepStage({
                 stageId: "vuStage",
@@ -1214,7 +1237,7 @@
                 transitionMs: 1200,
                 random: true
               });
-
+            
               // Image Editing: img_edit_1..img_edit_5.png
               initSweepStage({
                 stageId: "ieStage",
