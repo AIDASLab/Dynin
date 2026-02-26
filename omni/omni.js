@@ -6,13 +6,20 @@
     window.history.scrollRestoration = "manual";
   }
 
+  const root = document.documentElement;
   const runContentMdmReveal = () => {
     const TIME_SCALE = 1.5;
     const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduced && reduced.matches) return;
+    if (reduced && reduced.matches) {
+      root.classList.remove("mdm-pending");
+      return;
+    }
 
     const main = document.querySelector("main");
-    if (!main) return;
+    if (!main) {
+      root.classList.remove("mdm-pending");
+      return;
+    }
 
     const textTargets = Array.from(
       main.querySelectorAll(
@@ -96,6 +103,7 @@
       el.style.setProperty("--mdm-dur", `${Math.round(dur)}ms`);
     });
 
+    root.classList.remove("mdm-pending");
     requestAnimationFrame(() => {
       words.forEach((w) => w.classList.add("is-in"));
       mediaTargets.forEach((el) => el.classList.add("is-in"));

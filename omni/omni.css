@@ -25,6 +25,10 @@
     line-height: 1.65;
   }
 
+  html.mdm-pending main {
+    opacity: 0;
+  }
+
   /* Content-only MDM-like reveal (no full-page overlay) */
   .mdm-media {
     opacity: 0;
