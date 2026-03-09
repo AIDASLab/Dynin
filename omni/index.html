@@ -97,7 +97,7 @@
           <div class="card-group card-group--generic-card-group grid spacer-block-xs-bottom">
             <div class="card-group__cards grid grid__column--span-12">
 
-              <!-- 1) Text Reasoning -->
+              <!-- 1) Textual Reasoning -->
               <div class="generic-card-group-container">
                 <article class="card card--general flip-card js-flip-card" data-flip-delay="650" tabindex="0">
                   <div class="card__inner flip-card__inner">
@@ -161,7 +161,7 @@
                 </article>
 
                 <div class="capability-meta">
-                  <h3 class="capability-title">Text Reasoning</h3>
+                  <h3 class="capability-title">Textual Reasoning</h3>
                   <p class="capability-desc">
                     Solves multi-step problems and follows structured instructions with robust reasoning.
                   </p>
@@ -590,7 +590,7 @@
                   <!-- Use ANCHORS so it scrolls to stacked sections (not tab-switch) -->
                   <a class="nav-button nav-button-active" href="#ex-text-reasoning" data-nav="ex-text-reasoning">
                     <span class="nav-button__bg" aria-hidden="true"></span>
-                    <span class="nav-button__label">Text Reasoning</span>
+                    <span class="nav-button__label">Textual Reasoning</span>
                   </a>
 
                   <a class="nav-button" href="#ex-image-understanding" data-nav="ex-image-understanding">
@@ -620,19 +620,19 @@
           <!-- Stacked collections (each one stays on the page; nav scrolls to it) -->
           <div class="examples-collections">
 
-            <!-- 1) Text Reasoning -->
+            <!-- 1) Textual Reasoning -->
             <section id="ex-text-reasoning" class="collection-container" data-collection>
               <div class="collection-title">
-                <h3>Text Reasoning</h3>
+                <h3>Textual Reasoning</h3>
               </div>         
 
               <div class="collection-surface">
-                <div class="sweep-stage" id="trStage" aria-label="Text reasoning samples (auto-sweep)">
+                <div class="sweep-stage" id="trStage" aria-label="Textual reasoning samples (auto-sweep)">
                   <!-- current -->
                   <img
                     class="sweep-img sweep-img--a"
                     src="assets/examples/txt_1.png"
-                    alt="Text reasoning sample 1"
+                    alt="Textual reasoning sample 1"
                     loading="lazy"
                     decoding="async"
                   />
@@ -640,7 +640,7 @@
                   <img
                     class="sweep-img sweep-img--b"
                     src="assets/examples/txt_2.png"
-                    alt="Text reasoning sample 2"
+                    alt="Textual reasoning sample 2"
                     loading="lazy"
                     decoding="async"
                   />
@@ -1244,7 +1244,7 @@
             
                 // alt text prefix by stage
                 const altPrefix =
-                  stageId === "trStage" ? "Text reasoning sample" :
+                  stageId === "trStage" ? "Textual reasoning sample" :
                   stageId === "iuStage" ? "Image understanding sample" :
                   stageId === "vuStage" ? "Video understanding sample" :
                   "Image editing sample";
@@ -1302,7 +1302,7 @@
                 timer = window.setTimeout(step, 800 + Math.floor(Math.random() * 2400));
               }
             
-              // Text Reasoning: txt_1..txt_4.png
+              // Textual Reasoning: txt_1..txt_4.png
               initSweepStage({
                 stageId: "trStage",
                 basePath: "assets/examples/txt_",
