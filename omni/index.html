@@ -564,7 +564,7 @@
             <figure class="figure">
               <img
                 class="figure__img"
-                src="./assets/arc_compare2_hold2s.gif"
+                src="./assets/arc_compare3_hold4s.gif"
                 alt="Architecture comparison"
                 loading="lazy"
               />
@@ -1877,7 +1877,7 @@
           </p>          
 
           <figure class="figure">
-            <img class="figure__img" src="./assets/Fig_benchmark.png" alt="benchmark figure" />
+            <img class="figure__img" src="./assets/Fig_benchmark_mod.png" alt="benchmark figure" />
           </figure>          
         </div>
       </section>
@@ -1971,7 +1971,7 @@
             <div class="contributor-card">
               <!--img src="assets/examples/contributor_2.jpeg" alt="Contributor 2"-->
               <div class="contributor-info">
-                <div class="contributor-name">Hyunggeun Kim</div>
+                <div class="contributor-name">Hyeonggeun Kim</div>
                 <div class="contributor-role">Train Team</div>
               </div>
             </div>
@@ -2053,11 +2053,33 @@
       </style>
 
       <script>
-      document.querySelectorAll('.contributor-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
+      (() => {
+        const PEOPLE_BASE = "https://aidas.snu.ac.kr/people/";
+        const cards = document.querySelectorAll(".contributor-card");
+
+        const goToPerson = (card) => {
+          const nameEl = card.querySelector(".contributor-name");
+          const name = nameEl ? nameEl.textContent.trim() : "";
+          const url = new URL(PEOPLE_BASE);
+          if (name) url.searchParams.set("s", name);
+          const target = name ? `${url.toString()}#:~:text=${encodeURIComponent(name)}` : url.toString();
+          window.open(target, "_blank", "noopener,noreferrer");
+        };
+
+        cards.forEach((card) => {
           card.style.transition = "transform 0.25s ease";
+          card.setAttribute("role", "link");
+          card.setAttribute("tabindex", "0");
+
+          card.addEventListener("click", () => goToPerson(card));
+          card.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              goToPerson(card);
+            }
+          });
         });
-      });
+      })();
       </script>
 
     </main>
