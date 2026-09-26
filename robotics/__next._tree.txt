@@ -1,4 +1,4 @@
 :HL["/robotics/_next/static/chunks/0~_nv_dse04f~.css","style"]
-:HL["/robotics/_next/static/chunks/0d-p2ojoribqv.css","style"]
+:HL["/robotics/_next/static/chunks/0c4.e87c50d.3.css","style"]
 :HC["/",""]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"A4blW_sAZr-j8M_mz42l8"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"FF0x_hGVhwhkIfieTsQiB"}
